@@ -23,8 +23,8 @@ body {
   font-family: "questrialregular"; }
 
 header {
-  color: #1abc9c;
-  background-color: #34495e;
+  color: #fefefe;
+  background-color: #131313;
   padding: 5px 0;
   position: fixed;
   width: 100%; }
@@ -49,11 +49,6 @@ nav a:hover {
   opacity: 1;
   text-decoration: none; }
 
-nav .active {
-  color: #34495e;
-  border-radius: 3px;
-  background-color: #1abc9c; }
-
 header img {
   float: left; }
 
@@ -61,7 +56,7 @@ header .container {
   overflow: hidden; }
 
 a {
-  color: #1abc9c;
+  color: #2980b9;
   text-decoration: none; }
 
 a:hover {
@@ -119,8 +114,8 @@ footer a:hover {
 
 .main {
   padding: 65px 0px 20px 0px;
-  background-color: white;
-  color: #2c3e50; }
+  background-color: #fefefe;
+  color: #131313; }
 
 p {
   margin: 0px 0px 20px 0;
@@ -137,9 +132,7 @@ li {
 .other-posts h2 {
   border-radius: 5px 5px 0 0;
   margin: 0px 0px 20px 0px;
-  padding: 10px 20px;
-  background-color: #1abc9c;
-  color: white; }
+  padding: 10px 20px; }
 
 .other-posts ul {
   margin: 0;
@@ -166,7 +159,7 @@ li .recent-post:hover {
   text-align: center; }
 
 .post-nav a {
-  color: #e74c3c;
+  color: #2980b9;
   font-size: 3rem;
   padding: 0 40px;
   opacity: .7; }
