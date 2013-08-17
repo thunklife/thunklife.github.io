@@ -98,15 +98,25 @@ header small{
     left: 7px;
 }
 
-nav {
+nav {    
+    color: $header-text;
+}
+
+nav .links{
     float: right;
+}
+
+nav .brand{
+    float: left;
 }
 
 nav a{  
     opacity: .85;
-    line-height: 35px;  
+    line-height: 15px;  
     padding:5px 10px;   
     margin-left: 10px;
+    color: $header-text;
+    font-size: 1.5rem;
 }
 
 nav a:hover{    

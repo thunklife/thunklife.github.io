@@ -37,13 +37,21 @@ header small {
   left: 7px; }
 
 nav {
+  color: #fefefe; }
+
+nav .links {
   float: right; }
+
+nav .brand {
+  float: left; }
 
 nav a {
   opacity: .85;
-  line-height: 35px;
+  line-height: 15px;
   padding: 5px 10px;
-  margin-left: 10px; }
+  margin-left: 10px;
+  color: #fefefe;
+  font-size: 1.5rem; }
 
 nav a:hover {
   opacity: 1;
