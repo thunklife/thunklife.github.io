@@ -103,8 +103,7 @@ nav .brand{
     float: left;
 }
 
-nav a{  
-    opacity: .85;
+nav a{      
     line-height: 15px;  
     padding:5px 10px;   
     margin-left: 10px;
@@ -112,9 +111,9 @@ nav a{
     font-size: 1.5rem;
 }
 
-nav a:hover{    
-    opacity: 1;
-    text-decoration:none;   
+nav a:hover{        
+    text-decoration:none;
+    background-color: $dark-grey;   
 }
 
 header img {
