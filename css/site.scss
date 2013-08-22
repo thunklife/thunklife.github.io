@@ -77,7 +77,7 @@ body{
 
 header{
     color: $header-text;
-    background-color: $header-background;       
+    background-color: $header-background;     
     position: fixed;
     width: 100%
 }
@@ -227,10 +227,10 @@ li .recent-post{
     text-align: center; 
 }
 
-.post-nav a{
-    font-size: 3rem;    
+.post-nav a{   
     padding: 0 40px;
     opacity: .7;
+    @include flat-button;
 }
 
 .post-nav a:hover{
