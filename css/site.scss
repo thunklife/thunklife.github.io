@@ -1,60 +1,53 @@
 @font-face {
-    font-family: 'questrialregular';
-    src: url('../fonts/questrial-regular-webfont.eot');
-    src: url('../fonts/questrial-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/questrial-regular-webfont.woff') format('woff'),
-         url('../fonts/questrial-regular-webfont.ttf') format('truetype'),
-         url('../fonts/questrial-regular-webfont.svg#questrialregular') format('svg');
+    font-family: 'cantarellregular';
+    src: url('Cantarell-Regular-webfont.eot');
+    src: url('Cantarell-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('Cantarell-Regular-webfont.woff') format('woff'),
+         url('Cantarell-Regular-webfont.ttf') format('truetype'),
+         url('Cantarell-Regular-webfont.svg#cantarellregular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
 
 /*variables*/
+$dark-blue: #315281;
+$medium-blue: #3c65a4;
+$grey: #424850;
+$medium-grey: #323843;
+$light-grey: #a0a5ae;
+$dark-grey: #2b2f35;
 $nearly-white: #FEFEFE;
 $nearly-black: #131313;
-$belize-hole: #2980B9;
-$clouds: #ECF0F1;
-$silver: #BDC3C7;
-$concrete: #95A5A6;
-$asbestos: #7F8C8D;
-$wet-asphalt: #34495E;
 
 /*contextual colors*/
-$header-background: $nearly-black;
-$header-text: $nearly-white;
+$header-background: $medium-grey;
+$header-text: $light-grey;
 
 $primary-background: $nearly-white;
 $primary-text: $nearly-black;
-$primary-links: $belize-hole;
+$primary-links: $medium-blue;
 
-$container-background: $clouds;
-$container-header-text: #fff;
-$container-link: $asbestos;
-$container-link-hover: #fff;
-$container-link-background-hover: $asbestos;
+$quote-background: $light-grey;
+$quote-text: $dark-grey;
 
-$post-nav-link: $belize-hole;
+$footer-background: $light-grey;
+$footer-text: $dark-grey;
 
-$quote-background: $clouds;
-$quote-text: $concrete;
+$code-background: $light-grey;
+$code-text: $dark-grey;
 
-$footer-background: $asbestos;
-$footer-text: $silver;
-$footer-links: $clouds;
-
-$code-background: $wet-asphalt;
-$code-text: $clouds;
+$button-text: $nearly-white;
 
 
 @mixin rounded-corners{
     border-radius: 5px;
 }
 
-@mixin flat-button($background, $text){
+@mixin flat-button{
     @include rounded-corners;
-    background-color:$background;
-    color: $text;
+    background-color:$medium-blue;
+    color: $button-text;
     padding: 13px 24px 10px;
 }
 
@@ -79,7 +72,7 @@ html, body{
 
 body{
     background-color: $footer-background;   
-    font-family: "questrialregular";
+    font-family: "cantarellregular";
 }
 
 header{
@@ -175,10 +168,6 @@ footer{
     padding: 20px 0;
 }
 
-footer a{
-    color: $footer-links;
-}
-
 footer a:hover{
     text-decoration:none;
 }
@@ -214,12 +203,6 @@ li{
     line-height: 1.5rem;
 }
 
-.other-posts{   
-    background-color: $container-background;
-    @include rounded-corners;
-    padding-bottom: 20px;
-}
-
 .other-posts h2{
     border-radius: 5px 5px 0 0;
 margin: 0px 0px 20px 0px;
@@ -240,14 +223,6 @@ padding: 10px 20px;
 li .recent-post{
     display: block;
     padding: 0 10px;
-    @include rounded-corners;
-    color: $container-link
-}
-
-li .recent-post:hover{
-    text-decoration: none;
-    background-color: $container-link-background-hover;
-    color: $container-link-hover;
 }
 
 .post-nav{          
@@ -255,7 +230,6 @@ li .recent-post:hover{
 }
 
 .post-nav a{
-    color: $post-nav-link;
     font-size: 3rem;    
     padding: 0 40px;
     opacity: .7;
