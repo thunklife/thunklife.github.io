@@ -29,7 +29,7 @@ $primary-text: $nearly-black;
 $primary-links: $medium-blue;
 
 $quote-background: $light-grey;
-$quote-text: $dark-grey;
+$quote-text: $nearly-white;
 
 $footer-background: $light-grey;
 $footer-text: $dark-grey;
@@ -102,8 +102,7 @@ nav .brand{
     float: left;
 }
 
-nav a{      
-    line-height: 15px;  
+nav a{          
     padding:5px 10px;   
     margin-left: 10px;
     color: $header-text;
@@ -228,14 +227,13 @@ li .recent-post{
 }
 
 .post-nav a{   
-    padding: 0 40px;
-    opacity: .7;
+    padding: 0 40px;    
     @include flat-button;
 }
 
-.post-nav a:hover{
-    text-decoration: none;
-    opacity: 1;
+.post-nav a:active{
+    text-decoration: none;    
+    @include dark-box-shadow;
 }
 .highlight{
     margin-bottom: 20px;
