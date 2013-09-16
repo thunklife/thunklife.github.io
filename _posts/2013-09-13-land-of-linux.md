@@ -70,13 +70,15 @@ Worse than the crashes is when the key feature of Scratch, auto-save, fails. Scr
 
 ### Beware the Updated Kernel
 
-Probably the biggest pain I've had with elementary stems from the fact that it's running Ubuntu 12.04 LTS. That's old, son. Ubuntu is on 13.10 already and elementary was only officially released in August. You can upgrade to the 13.04 kernel so of course I did. That was a damn mistake, one that I tried correct and then remade 3 of 4 times. Basically, my machine + elementary + 13.04 = non-working laptop. So I have to stay on the 12.04 version that elementary is based on, which is kind of a bummer, but I like elementary enough to let it slide.
+Probably the biggest pain I've had with elementary stems from the fact that it's running Ubuntu 12.04 LTS. That's old, son. Ubuntu is on 13.10 already and elementary was only officially released in August. You can upgrade to the 13.04 kernel, so of course I did. That was a damn mistake, one that I tried correct and then remade 3 or 4 times. Basically, my machine + elementary + 13.04 = non-working laptop. So I have to stay on the 12.04 version that elementary is based on, which is kind of a bummer, but I like elementary enough to let it slide.
 
 ### Not All Bad
 
 It might sound like I'm harping on the bad, but I don't mean to. Aside from being beautiful, there are some very good core concepts at work here. For example, by default, there is no minimize button on a window. That might seem strange to some, and you can turn it back on it you like, but it was done with purpose. The vision for applications in elementary is that they are stateful, so closing is no different than minimzing. If you close the music app, it continues to play, giving you controls in your tray, and opening the application again takes you right where you would expect to be. Now, this falls apart with apps not developed specifically for elementary, but I honestly haven't had any issues with it.
 
 Another wonderful thing is consistency. Now, this is Linux so you can do whatever the hell you want and install any ugly piece of software your heart desires, but the core of elementary is consistent. All the default apps have the same icon/menu placements; the same experience. It's very refreshing.
+
+One of the best things about elementary I found is [Elementary Update](http://elementaryupdates.com). It's not an official elementary site, but it's got some decent resources and suggestions of things to download. The [Top Things to do After Installing...](http://www.elementaryupdate.com/2013/08/top-things-to-do-after-installing-luna.html) is especially helpful.
 
 ## Wrap Up
 
