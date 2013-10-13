@@ -6,7 +6,9 @@ layout: default
 </div>
 <div class="post-nav">
 	<div class="container">
-	<a href="{{page.previous.url}}">Prev</a>				
-	<a href="{{page.next.url}}">Next</a>		
+		{% if post.previous %}
+			<a href="{{post.previous.url}}">Prev</a>				
+			<a href="{{post.next.url}}">Next</a>		
+		{% endif %}
 	</div>	
 </div>

@@ -1,5 +1,5 @@
 auto: true
-permalink: /:year/:month/:day/:title
+permalink: none
 pygments: true
 server: true
 exclude:

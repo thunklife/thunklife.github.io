@@ -20,6 +20,8 @@ $dark-grey: #2b2f35;
 $nearly-white: #FEFEFE;
 $nearly-black: #131313;
 
+$haskell-blue: rgb(103, 167, 205);
+
 /*contextual colors*/
 $header-background: $medium-grey;
 $header-text: $light-grey;
@@ -92,43 +94,39 @@ header small{
 
 nav {    
     color: $header-text;
+    .links{
+        float: right;
+    };
+    .brand {
+        float: left;
+    };
+    a {
+        padding:5px 10px;   
+        margin-left: 10px;
+        color: $header-text;
+        font-size: 1.5rem;
+        :hover {
+            text-decoration:none;
+            background-color: $dark-grey;   
+        }
+    }
 }
 
-nav .links{
-    float: right;
-}
-
-nav .brand{
-    float: left;
-}
-
-nav a{          
-    padding:5px 10px;   
-    margin-left: 10px;
-    color: $header-text;
-    font-size: 1.5rem;
-}
-
-nav a:hover{        
-    text-decoration:none;
-    background-color: $dark-grey;   
-}
-
-header img {
-    float: left;    
-}
-
-header .container{
-    overflow: hidden;
+header {
+    img{
+        float: left; 
+    };
+    .container {
+       overflow: hidden; 
+    }
 }
 
 a{
     color: $primary-links;
     text-decoration: none;
-}
-
-a:hover{    
-    text-decoration: underline;
+    :hover {
+        text-decoration: underline;
+    }
 }
 
 ul, ol{ 
@@ -154,19 +152,15 @@ blockquote{
     margin-bottom: 20px;
     color: $quote-text;
     box-shadow: inset 0 2px 2px rgba(0,0,0,.15), inset 0 0 1px rgba(0,0,0,.1);
-}
-
-blockquote p{
-    margin: 0;
+    p{
+        margin: 0;
+    }
 }
 
 footer{
     color: $footer-text;
     padding: 20px 0;
-}
-
-footer a:hover{
-    text-decoration:none;
+    text-align: center;
 }
 
 .footer-logo{
@@ -200,41 +194,43 @@ li{
     line-height: 1.5rem;
 }
 
-.other-posts h2{
-    border-radius: 5px 5px 0 0;
-margin: 0px 0px 20px 0px;
-padding: 10px 20px;
+.other-posts {
+    h2 {
+        border-radius: 5px 5px 0 0;
+        margin: 0px 0px 20px 0px;
+        padding: 10px 20px;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+    li {
+        line-height: 2rem;
+        padding: 0 10px;
+        margin-bottom: 10px;
+    }
 }
 
-.other-posts ul{
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-.other-posts li{
-    line-height: 2rem;
-    padding: 0 10px;
-    margin-bottom: 10px;
-}
-
-li .recent-post{
-    display: block;
-    padding: 0 10px;
+li {
+    .recent-post{
+        display: block;
+        padding: 0 10px;
+    }
 }
 
 .post-nav{          
     text-align: center; 
+    a {
+        padding: 0 40px;    
+        @include flat-button;
+        :active{
+            text-decoration: none;    
+            @include dark-box-shadow;
+        }
+    }
 }
 
-.post-nav a{   
-    padding: 0 40px;    
-    @include flat-button;
-}
-
-.post-nav a:active{
-    text-decoration: none;    
-    @include dark-box-shadow;
-}
 .highlight{
     margin-bottom: 20px;
     background-color: $code-background;
@@ -242,4 +238,45 @@ li .recent-post{
     @include rounded-corners;
     font-size: .8rem;
     padding: 10px;
+}
+
+.haskell{
+    body{
+        background-color: $haskell-blue;
+    }
+    header{
+        background: url('../images/haskellBG.png')
+    }
+    nav{
+        a{
+            color: white;
+            text-shadow: 0px 1px 1px rgba(0,0,0, .8);
+            :hover{
+                background: transparent;
+            }
+        }
+    }
+    a{
+        color: $haskell-blue;
+    }
+    footer{        
+        color: white;        
+    }
+
+}
+
+.with-contents{
+    .container{
+        max-width: 1000px;
+        overflow: hidden;
+    }
+    .content{
+        width: 80%;
+        float: left;
+        margin-right: 2%
+    }
+    .table-of-contents{
+        width: 18%;
+        float: left;        
+    }
 }

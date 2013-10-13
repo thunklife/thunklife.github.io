@@ -1,0 +1,20 @@
+---
+layout: default
+title: Home
+page-class: haskell
+---
+<div class="container"> 
+	<div class="other-posts">
+		<h1>Haskell Journal</h1>
+		<p>So I decided to learn Haskell by reading <a href="http://learnyouahaskell.com">Learn You a Haskell for Great Good</a>. Haskell is unlike anything I ever tried to learn, so I decided to jot down notes as I go. I put them here because I think it's important to share this stuff with whomever might want it. I've got code samples, both from the book and my own, on <a href="#">GitHub</a> if you're into that sort of thing.</p>
+		<p>This isn't meant to be tutorial, it's just a tool that is helping me learn. Maybe it'll help you too.
+		<h2>Chapter Notes</h2>        
+		<ul>
+			{% for post in site.posts %}
+				{% if post.categories contains 'haskell' order:ascending %}
+	  			<li><a class="recent-post" href="{{post.url}}">{{post.post-title}}</a></li>
+	  			{% endif %}
+			{% endfor %}
+		</ul> 
+	</div>
+</div>		
