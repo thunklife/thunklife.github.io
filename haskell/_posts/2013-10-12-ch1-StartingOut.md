@@ -76,6 +76,7 @@ doubleMe x = x + x
 -	lists are comparable if their items are.
 	-	lists are compared item by item starting at their head.
 	-	all items must meet the comparison
+-	There are a number of functions for working with lists
 	-	head returns the first element
 	-	tail removes the head and returns the rest
 	-	last returns the last element
@@ -91,7 +92,11 @@ doubleMe x = x + x
 	-	sum sums a list of numbers
 	-	product returns the product of a list of numbers
 	-	elem takes a thing and a list, tells if the thing is in the list.
--	ranges let you shorthand lists of consecutive things ex. [1..30]
+-	ranges let you shorthand lists of consecutive things
+{% highlight haskell linenos %}
+[1..15]
+--[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+{% endhighlight %}
 -	ranges let you specify the "step"
 {% highlight haskell linenos %}
 [2,4..20] 
@@ -101,11 +106,13 @@ doubleMe x = x + x
 -	list comprehensions build lists out of functions
 {% highlight haskell linenos %}
 [x*2 | x <- [1..10]]
+--[2,4,6,8,10,12,14,16,18,20]
 {% endhighlight %}
-	-	_draws_ an element out of a list and *binds* it to a 'name', the '|' separates the comprehension from the *output*, the *output* is 'action' to tak on each element as it goes into the new list.
+	-	_draws_ an element out of a list and *binds* it to a name, the '|' separates the comprehension from the *output*, the *output* is action to take on each element as it goes into the new list.
 	-	comprehensions allow for predicates to be specified at the end. Below doubles all number from 1-10 but only returns ones greater or equal to 12
 {% highlight haskell linenos %}
 [x*2 | x <- [1..10], x*2 >=12]
+--[12,14,16,18,20]
 {% endhighlight %}
 -	you can have multiple predicates separated by commas
 	-	this is called filtering

@@ -148,8 +148,8 @@ li .recent-post {
 
 .highlight {
   margin-bottom: 20px;
-  background-color: #a0a5ae;
-  color: #2b2f35;
+  background-color: #3c3c3c;
+  color: #fff;
   border-radius: 5px;
   font-size: .8rem;
   padding: 10px; }
@@ -165,16 +165,30 @@ li .recent-post {
     background: transparent; }
 .haskell a {
   color: #67a7cd; }
+.haskell ul {
+  padding-bottom: 0px; }
 .haskell footer {
   color: white; }
+  .haskell footer a {
+    color: #315281; }
+  .haskell footer .license {
+    text-align: left; }
+.haskell .highlight {
+  margin: 20px 0; }
 
 .with-contents .container {
   max-width: 1000px;
   overflow: hidden; }
 .with-contents .content {
-  width: 80%;
+  width: 71%;
   float: left;
-  margin-right: 2%; }
+  margin-right: 2%;
+  padding: 0 2%; }
 .with-contents .table-of-contents {
-  width: 18%;
-  float: left; }
+  position: fixed;
+  left: 66%;
+  width: 18%; }
+  .with-contents .table-of-contents ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; }

@@ -21,6 +21,7 @@ $nearly-white: #FEFEFE;
 $nearly-black: #131313;
 
 $haskell-blue: rgb(103, 167, 205);
+$haskell-orange: rgb(255, 102, 0);
 
 /*contextual colors*/
 $header-background: $medium-grey;
@@ -233,8 +234,8 @@ li {
 
 .highlight{
     margin-bottom: 20px;
-    background-color: $code-background;
-    color: $code-text;
+    background-color: #3c3c3c;
+    color: #fff;
     @include rounded-corners;
     font-size: .8rem;
     padding: 10px;
@@ -259,10 +260,21 @@ li {
     a{
         color: $haskell-blue;
     }
+    ul{
+        padding-bottom: 0px;
+    }
     footer{        
         color: white;        
+        a{
+            color: $dark-blue;
+        }
+        .license{
+            text-align: left;
+        }
     }
-
+    .highlight{
+        margin: 20px 0;
+    }
 }
 
 .with-contents{
@@ -271,12 +283,21 @@ li {
         overflow: hidden;
     }
     .content{
-        width: 80%;
+        width: 71%;
         float: left;
-        margin-right: 2%
+        margin-right: 2%;        
+        padding: 0 2%
     }
     .table-of-contents{
+        position: fixed;
+        left: 66%;
         width: 18%;
-        float: left;        
+
+        ul{
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
     }
 }
