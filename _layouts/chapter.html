@@ -6,9 +6,6 @@ layout: haskell
 		{{content}}
 	</div>
 	<div class="table-of-contents">
-		<div class="notes-tag">
-    		<a href="/haskell">Haskell</a>
-   		</div>
 		<h2>Chapters</h2>
 		<ul>
 			{% for post in site.posts %}
@@ -16,6 +13,7 @@ layout: haskell
 	  				<li><a class="note-link" href="{{post.url}}">{{post.post-title}}</a></li>
   				{% endif %}
 			{% endfor %}
+			<li><a class="note-link" href="/haskell">About</a></li>
 		</ul>
 	</div>
 </div>
