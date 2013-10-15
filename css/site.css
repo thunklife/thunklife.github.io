@@ -175,6 +175,10 @@ li .recent-post {
     text-align: left; }
 .haskell .highlight {
   margin: 20px 0; }
+.haskell .about {
+  border-top: 1px solid #67a7cd;
+  margin: 20px 0 0 0;
+  padding: 10px 0 0 0; }
 
 .with-contents .container {
   max-width: 1000px;
