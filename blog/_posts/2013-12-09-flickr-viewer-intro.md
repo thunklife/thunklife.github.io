@@ -86,9 +86,9 @@ Now for the good stuff, the builds. Now, I can't take credit for this, they're t
 
 I won't go into the nitty-gritty of each, but essentially you've got two sets of commands. 
 
-First you've got your 'watch' commands: 'watch-js' and 'watch-css'. 'watch-js' uses watchify to take everything in app.js, bundle it up, and watch it. Similarly, 'watch-css' will use catw to concatenate my CSS files and watch them. I'm not doing anything fancy with the CSS, so a simple concatenation works just find. 'watch' is just a handy hand shortcut to run both.
+First you've got your 'watch' commands: 'watch-js' and 'watch-css'. 'watch-js' uses watchify to take everything in app.js, bundle it up, and watch it. Similarly, 'watch-css' will use catw to concatenate my CSS files and watch them. I'm not doing anything fancy with the CSS, so a simple concatenation works just fine. 'watch' is just a handy hand shortcut to run both.
 
-Next you've got your 'build' commands: 'build-js' and 'build-css'. They basically do the exact same thing as the 'watch' commands except they don't watch, and we run the bundled JS through uglifyjs. Again, we've got a shortcut to both with 'build'.
+Next you've got your 'build' commands: 'build-js' and 'build-css'. They basically do the exact same thing as the 'watch' commands except they don't watch, plus the bundled JS gets run through uglifyjs. Again, we've got a shortcut to both with 'build'.
 
 Lastly, you've got 'start'. This just spins up http-server.
 
