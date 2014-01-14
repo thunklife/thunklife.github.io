@@ -2,16 +2,21 @@
 layout: default
 title: Home
 ---
-<div class="container">
- <h1 class="salutation"></h1>
-	<div class="other-posts">
-		<h2>Writings</h2>        
-		<ul>
-			{% for post in site.posts%}
-				{% if post.categories contains 'blog'%}
-	  			<li><a class="recent-post" href="{{post.url}}">{{post.post-title}}</a></li>
-	  			{% endif %}
-			{% endfor %}
-		</ul> 
+<div>
+	<h2>Writings</h2>        
+	<div class='summaries'>
+		{% for post in site.posts%}
+			{% if post.categories contains 'blog'%}
+			<div class='summary'>
+				<div class='header'>
+  					<h3 class='title'><a class="recent-post" href="{{post.url}}">{{post.post-title}}</a></h3>
+  					<span class='date'>{{ post.date | date: "%a, %b %d, %Y" }}</span>
+  				</div>
+  				<div>
+  					<p>{{post.excerpt}}</p>
+  				</div>
+  			</div>
+  			{% endif %}
+		{% endfor %}
 	</div>
-</div>		
+</div>	

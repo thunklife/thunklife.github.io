@@ -1,8 +1,9 @@
 ---
 layout: post
 post-title: Underline - An Introduction
-synopsis: an introduction to my Underline project
+excerpt: For the uninitiated, Underscore is a utility library for JavaScript. It's full of useful functions for working with Arrays, Objects, Collections, etc. It's the number one depended upon package on npm; by a lot...
 category: blog
+published: false
 ---   
 
 #Underline: An Introduction

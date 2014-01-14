@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: Lost in the Land of Linux
-synopsis: my switch from Windows to Linux, and the journey so far.
+excerpt: A while back, influenced by my declining opinion of Windows 8, my increased desire to learn new languages, and my inability to afford a Mac, I decided to make the switch to Linux. I started with 30 day trial with Ubuntu 12.10 installed side-by-side with Windows but with the caveat that I would not boot into Windows...
 category: blog
 ---
 

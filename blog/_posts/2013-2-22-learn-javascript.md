@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: You need to learn JavaScript
-synopsis: why I think you need to know JavaScript
+excerpt: Here's the thing, if you claim to be a web developer, you need to know JavaScript. Real JavaScript. There was a time, not long ago, that we didn't write JavaScript; we wrote jQuery. That time is gone. The game has changed. I'm shouldn't be telling you anything you don't know...
 category: blog
 ---      
 

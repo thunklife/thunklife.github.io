@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: Dell XPS 13 & ElementaryOS
-synopsis: my switch from Windows to Linux, and the journey so far.
+excerpt: I take a long time to make purchases; I hate spending money on myself. There is this cliche, that men hate going shopping with their wives because it takes forever. In that cliche, I'm the woman. The last time I bought a pair of pants, I knew _exactly_ which brand and style I wanted...
 category: blog
 ---
 

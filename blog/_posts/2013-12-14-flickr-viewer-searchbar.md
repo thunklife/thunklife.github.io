@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: Flickr Viewer - Part 2 The Search Bar
-synopsis: using nodejs, npm and browserify to build an application
+excerpt: In my last post, I showed how to get all of the basics set up to build an application using nodejs, npm and browserify. This time we're going to create the first feature a search bar...
 category: blog
 ---    
 

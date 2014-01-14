@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: The End of the World
-synopsis: when my site died and I lost everything
+excerpt: Not too long ago something terrible happened. I'm not sure exactly what caused it, but I have my theories. Maybe a tiny meteor managed to make it through our atmosphere, and hit land at just the right spot. Maybe it was a that group of ex-KGB agents I had a run-in with; they have a very particular set of skills. Maybe it a server upgrade. Maybe it was ninjas. Probably it was ninjas...
 category: blog
 ---      
 

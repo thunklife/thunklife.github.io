@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: Flickr Viewer - Part 1 Introduction
-synopsis: using node, npm and browserify to build an application
+excerpt: The internetz are always full with posts and conversations about the latest and greatest frameworks. Everywhere I turn there is another "Why Framework X is better than Framework Y" thread. Recently, however, the idea of building things without frameworks has been coming up...
 category: blog
 ---    
 

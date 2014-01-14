@@ -1,8 +1,9 @@
 ---
 layout: post
 post-title: Underline - Array First
-synopsis: an introduction to my Underline project
+excerpt: It seems fitting that the first function I'm going to look at re-implementing is first, also known as head and take...
 category: blog
+published: false
 --- 
 #Underline - Array: First
 
@@ -44,7 +45,7 @@ var curry = require('curry'),
 	concat = Array.prototype.concat;
 
 module.exports = curry(function first(n,arr){
-	if(!arr || !arr.length) return void 0;
+	if(!arr.length) return void 0;
 	if(arr.length === 1) return arr[0];
 
 	return take(n, arr.slice(0));
@@ -73,11 +74,10 @@ See the problem with constraints is that sometimes they're all you see. If you s
 var curry = require('curry');
 
 module.exports = curry(function first(n,arr){
-	if(!arr || !arr.length) return void 0;
+	if(!arr.length) return void 0;
 	if(arr.length === 1) return arr[0];
-
-	arr = arr.slice(0);
-	return arr.splice(0, n);
+	
+	return arr.slice(0, n);
 });
 {% endhighlight %}
 

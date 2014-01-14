@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: Fear of Failure
-synopsis: being afraid to try new things, and also teaching my kids (a little)
+excerpt:  Right now my 5 year old is obsessed with playing checkers. Aside from walking around the house singing songs in a random stream of conciousness, it's her favorite thing to do. Now, my wife and I have very different takes on how to play checkers with a 5 year old...
 category: blog
 ---      
         

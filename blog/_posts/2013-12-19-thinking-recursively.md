@@ -1,7 +1,7 @@
 ---
 layout: post
 post-title: Thinking Recursively
-synopsis: my a-ha moment with recursion
+excerpt: I've been slowly going through Learn You a Haskell for Great Good. I thought learning Haskell would be a mind expanding experience, even if I never do anything "real" with the language itself. So far I haven't been disappointed; I highly recommend it...
 category: blog
 ---    
 #Thinking Recursively
