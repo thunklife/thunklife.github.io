@@ -9,7 +9,7 @@ date: 2014-01-16 21:00:00
 #Underline: An Introduction
 For the uninitiated, [Underscore](http://underscorejs.org) is a utility library for JavaScript. It's full of useful functions for working with Arrays, Objects, Collections, etc. It's the number one depended upon package on [npm](https://npmjs.org/browse/depended); by a lot. Chances are, your favorit framework depends on it at some level. I personally use it every single day and I find it to be an invaluable resource.
 
-My point is this: there is a ton of good stuff in there and, much like diving into the [jQuery](http://www.paulirish.com/2010/10-things-i-learned-from-the-jquery-source/) [source](http://www.paulirish.com/2011/11-more-things-i-learned-from-the-jquery-source/), you're bound to learn a lot from it. But you know how you might learn even more? Implementing it, which [Eno Compton](https://twitter.com/username_eno) [suggested](https://twitter.com/username_eno/status/413764143175331840) on twitter a few days ago. 
+My point is this: there is a ton of good stuff in there and, much like diving into the [jQuery](http://www.paulirish.com/2010/10-things-i-learned-from-the-jquery-source/) [source](http://www.paulirish.com/2011/11-more-things-i-learned-from-the-jquery-source/), you're bound to learn a lot from it. But you know how you might learn even more? Implementing it, which [Eno Compton](https://twitter.com/username_eno) [suggested](https://twitter.com/username_eno/status/413764143175331840) on twitter awhile back. 
 
 A lot of the Haskell exercises I'd been doing in JavaScript had started me on this path, so I've decided to go full force and implement one function every other day, and blog about it; maybe more if time permits.
 
@@ -35,7 +35,7 @@ By allowing functions to be partially applied, sitting there waiting for their d
 Loops are fast. Faster than native iterative methods like <code>Array.prototype.forEach</code>. Certainly faster than recursion, and recursion in JavaScript has that pesky stack to deal with. But remember this is an educational experiment, so I'm not going to worry about performance optimizations. Plus, loops are frowned on in FP.
 
 ###Each Function is a Module
-Another beef I have with Underscore is it's lack of modularity. I can't just require a <code>map</code>, for example; I have to take the whole thing. [Other alternative](http://lodash.com/) libraries have custom builds, which is great. My preference is small modules that I can <code>require</code> and compose as I see fit. So I'm going to do each function as a node module. 
+Another beef I have with Underscore is it's lack of modularity. I can't just require <code>map</code>, for example; I have to take the whole thing. [Other alternative](http://lodash.com/) libraries have custom builds, which is great. My preference is small modules that I can <code>require</code> and compose as I see fit. So I'm going to do each function as a node module. 
 
 Having each function be a module means I can require bits and pieces as I see fit, without having to bring in an entire library. Of course, sometimes you want a whole library, so I'll have a module for that too.
 
@@ -59,7 +59,7 @@ Projects/under-line/
 {% endhighlight %}
 
 ##One Last Thing
-The currying requirement adds a bit of a wrench into things. Languages like Haskell curry by default; JavaScript does not. One  option would be to write each function in a style that checks the number of arguments passed and either returns a function to get the remainder, or returns the result; like so:
+The currying requirement adds a bit of a wrench into things. Languages like Haskell curry by default; JavaScript does not. One  option would be to write each function in a style that checks the arguments passed and either returns a function to get the remainder, or returns the result; like so:
 
 {% highlight javascript linenos %}
 function add(a,b){
@@ -89,7 +89,7 @@ module.exports = function(fn, fnLength) {
 }
 {% endhighlight %}
 
-That <code>curry</code> function is the result of stuff I gleened from reading [JavaScript Allonge](http://leanpub.com/javascript-allonge) and from working through the Functional Programming exercises from [node school](http://nodeschool.io). It doesn't look strange to me any more, but it certainly would have a month ago.
+That <code>curry</code> function is the result of stuff I gleened from reading [JavaScript Allonge](http://leanpub.com/javascript-allonge) and from working through the Functional Programming exercises from [node school](http://nodeschool.io). It doesn't look strange to me any more, but it certainly would have a few months ago.
 
 <code>curry</code> takes a function, finds the number of arguments, and recursively returns functions until all arguments are accounted for. Once all arguments are present and accounted for, we call the original function and supply the arguments. Optionally, you can pass in the number of arguments to curry; which is handy if you want to curry variadic functions (those which take a varying number of arguments). With this in the toolbelt, I can write functions like I normally would and wrap them in a call to <code>curry</code>.
 
