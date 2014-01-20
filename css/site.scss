@@ -214,11 +214,13 @@ footer{
 .summary{
     overflow: hidden;
     border-bottom: 1px solid $summary-border;
-    padding: 10px 0px;
+    padding: 20px 20px 0px 20px;
+    &:hover{
+        background-color: #F1F2F3;
+    }
     .header{
         overflow: hidden;
         padding: 10px 0px;
-        margin-bottom: 10px;
         .title{
             float: left;
             font-style: normal;
