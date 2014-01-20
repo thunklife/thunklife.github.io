@@ -214,7 +214,7 @@ footer{
 .summary{
     overflow: hidden;
     border-bottom: 1px solid $summary-border;
-    padding: 20px 0px;
+    padding: 10px 0px;
     .header{
         overflow: hidden;
         padding: 10px 0px;
@@ -222,6 +222,7 @@ footer{
         .title{
             float: left;
             font-style: normal;
+            padding-bottom: 0px;
         }
         .date{
             float: right;
