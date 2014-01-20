@@ -283,9 +283,13 @@ li {
     background-color: #3c3c3c;
     color: #fff;
     font-size: .8rem;
-    padding: 10px;
     overflow-y: auto;
     border-radius: 5px;
+    pre{
+        overflow-y: auto;
+        white-space: pre;
+        padding: 10px;
+    }
 }
 
 .haskell{
