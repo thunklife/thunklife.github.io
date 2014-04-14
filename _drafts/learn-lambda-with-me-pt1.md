@@ -244,8 +244,26 @@ There are two rules that you can use to determine if a variable is considered **
 
 If the expression is a function ```λ<name>.<body>```, then the variable is bound
 if ```<name>``` appears in ```<body>``` or if it is bound in ```body```. For example, in
-```λprison.(prison λprisoner.prisoner)``` both ```prison``` and ```prisoner``` are bound.
- However, in ```λprison.(prison prisoner)``` only prison is bound.
+```λx.(x λy.y)``` both ```x``` and ```y``` are bound. However, in ```λx.(x y)```
+only ```x``` is bound.
 
  If the expression is an application ```(<function><argument>)```, the variable
- is bound if it is bound in either ```<function>``` or ```<argument>```
+ is bound if it is bound in either ```<function>``` or ```<argument>```. For example
+ in the application ```(λx.x y)``` only ```x``` is bound. However, in ```(λx.x λy.y)```
+ both ```x``` and ```y``` are bound.
+
+###Free Variables
+ There are three rules you can use to determine if a variable is **free**. As you
+ may have guessed, they are the opposite of the rules for bound variables.
+
+ If the expression is a function ```λ<name>.<body>```, and the variable name is
+ not ```<name>``` and the variable is not bound in ```<body>``` then it is free.
+ In the example above ```λx.(x y)``` the variable ```y``` is free.
+
+ If the expression is an application ```(<function> <argument>)``` and the variable
+ is not bound in either ```<function>``` nor ```<argument>```, then it is considered
+ free. Again, in the example above, ```(λx.x y)``` the variable ```y``` is free.
+
+ Lastly, if the expresion is only a name ```<name>``` then the variable is free.
+
+
