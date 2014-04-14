@@ -4,7 +4,7 @@ post-title: Underline - Array First
 excerpt: It seems fitting that the first function I'm going to look at re-implementing is first, also known as head and take...
 category: blog
 date: 2014-01-16 21:30:00
---- 
+---
 
 #Underline - Array: First
 
@@ -56,7 +56,7 @@ function take(n,arr){
 	var head;
 	if(n <= 0 || !arr.length) return [];
 	head = arr.shift();
-	
+
 	return concat.call([],head, take(--n, arr));
 }
 {% endhighlight %}
@@ -77,7 +77,7 @@ var curry = require('curry');
 module.exports = curry(function first(n,arr){
 	if(!arr.length) return void 0;
 	if(arr.length === 1) return arr[0];
-	
+
 	return arr.slice(0, n);
 });
 {% endhighlight %}

@@ -1,0 +1,251 @@
+---
+layout: post
+post-title: Learn λ Calculus With Me - Introduction
+category: blog
+---
+
+#Learn λ Calculus With Me - Introduction
+_I'm currently working through [An Introduction to Functional Programming
+through Lambda Calculs](http://www.amazon.com/gp/product/0486478831). As an
+exercise I'm taking functions from each chapter and implementing them in JavaScript.
+You can check out the project on [GitHub](https://github.com/wilhelmson/lambdajs);
+I'll be updating it as I complete each chapter._
+
+_Fair warning: I don't have the best track record with series posts. I get a couple
+in and fizzle. That could very well happen here._
+
+##λ What?
+λ calculus was developed in the 1930s by Alonzo Church as a model for computability,
+ and is a central concept in computer sciene. It was developed during the same time
+ that Turing was developing his Turing machines, and was actually proven, by Turing,
+ to be equivalant to a Turing machine in terms of modeling computability. That is
+ to say, it can be used to describe all aspects of programming.
+
+ λ calculus is an extremely simple system based on pure abstraction. As it can
+ be used to describe all aspects of a programming language, it can be used as a
+ 'machine code', of sorts, for functional programs; which I'll get into in later
+ posts.
+
+One last thing to note, before continuing. λ calculus is only functions. You will
+see, later, how it can be used to express numbers, collections, boolean logic and
+much, much more, but it is important to remember that we're talking in the abstract.
+It's just functions all the way down.
+
+##The Anatomy of a λ Expressions
+ λ expressions can be one of three things:
+  -A name
+  -A function
+  -A function application
+A name is any number of non-blank characters, though you'll usually seem them in
+single character form.
+
+Functions have the form: ```λ.<name>.<body>```
+
+Function application take the following form: ```(<function expression> <argument>)```
+
+A function expression provides an abstraction, and the application specializes
+that abstraction by providing a value to the name defined by the function expression.
+For example: ```(λx.x λs.(s s))```
+
+That's it, that's all there is to know. Now go forth and do good maths.
+
+Notice the lack of numbers, strings, assignment and virtually everything else that
+you think of when you think of programming. With λ calculus you have to think
+more abstractly, what exactly is a number anyway? Now, the lack of assignment becomes
+a problem; expressions get really, really long and hard to follow. For this exercise
+I'm going to allow assignment of expressions to variables.
+
+##JavaScript?
+Sure why not? It's the language I use the most, but more importantly it has lambda expressions. Here is a
+here is a lambda in JavaScript:
+{% highlight javascript linenos %}
+var id = function(x){
+  return x;
+}
+{% endhighlight %}
+That's it. Since functions are first class in JavaScript we can pass them to functions,
+return them from functions, and apply them with other functions; and everything in λ
+calculus is functions.
+
+##Baby's First Functions
+There is much more to discuss about λ functions, but without some context, it won't
+do much good. So let's look at some simple functions to get our feet wet.
+
+###Identity
+If you've done any functional programming, the concept of the idenity function won't be
+new to you, if not, it'll look pretty pointless...at first. The identity function has
+this form: ```λx.x```
+
+Based on what we know, about the anatomy of a λ function, we can say that this function
+has a single variable with the name ```x```. We then have a ```.```, which separates
+the name from the body, and then ```x``` again.
+
+So this does what exactly? Oh, well, it takes a value and then returns it.
+
+Lame, right? Don't worry, it'll make sense later.
+
+In JavaScript, idenitity looks like this:
+{%highlight javascript linenos %}
+var identity = function (x){
+  return x;
+}
+{% endhighlight %}
+
+Lame again, I know.
+
+###Self Application
+The self application function is another one that seems to be of little value,
+but when you get into recursion, it really shows its power. The self-application
+function has this form: ```λs.(s s)```
+
+This function takes a single argument ```s```. The body of the function is a function
+application: ```(s s)```. Remembering that everything is a function, this application
+takes ```s``` and applies it to itself.
+
+Consider the following: ```(λs.(s s) λx.x)```
+
+The function application above applies the self-application function to identity.
+The result is that ```s``` is replaced by the argument ```λx.x``` in the function body.
+So identity is applied to identity, the result of which is...identity.
+
+And now you're thinking, "What a waste of freaking time."
+
+Stick with me though, it gets really cool.
+
+For fun, consider what this does: ```(λs.(s s) λs.(s s))```
+
+Now for the JavaScript.
+{% highlight javascript linenos%}
+var selfApply = function(s){
+  return s(s);
+}
+{% endhighlight %}
+
+###Function Application
+The function application function will probably be more familiar to most JavaScript
+developers because the concept is not too dissimilar to callbacks.
+
+The function application function has this form: ```λf.λa.(f a)```
+
+The function applicatio function does exactly what its name implies, it takes a function
+and an argument, and applies the function the function to that argument.
+
+As an excercise, let's look at an example: ```((λf.λa(f a) λs.(s s) λx.x)```
+
+If we reduce this function, ```f``` is replaced with ```λs.(s s)```, resulting in
+```λa.(λs.(s s) a)```.
+
+We now have a function that needs an argument to apply the self-application function to.
+So we can do this: ```(λa.(λs.(s s) a) λx.x)```. Here ```a``` gets replaced by ```λx.x```
+giving ```(λs.(s s) λ.x.x)``` which is the same as the example of self-application above.
+
+In JavaScript, this  is actually pretty simple:
+{% highlight javascript linenos %}
+var apply = function(f){
+  return function (a){
+    return f(a);
+  }
+}
+{% endhighlight %}
+
+##Selection and Pairs
+Things are about to get a little more abstract, a little more mind expanding,
+and a lot more fun as we consider how to select arguments in nested functions
+and how to use functions to model a pair. These functions are the foundation for
+modelling boolean logic, and integer arithmetic.
+
+###First
+Let's say we have a pair of things, and we want to get the first one, how would
+you got about that using only functions? Well it would look something like this:
+```λfirst.λsecond.first```.
+
+The first, also called const, takes two arguments and returns the first. I'm not
+going to bother with an example reduction because it's pretty self-explanatory.
+
+In JavaScript it looks like this
+{% highlight javascript linenos %}
+var first = function(x){
+  return function(y){
+    return x;
+  };
+};
+{% endhighlight %}
+
+###Second
+I'm going to move on to the next function quickly because they make more sense
+once you see how to create pairs. The second function is almost identical to first,
+except it returns the second argument.
+
+The second function has this form: ```λfirst.λsecond.second```
+
+I'm sure you've already figured out what it looks like in JavaScript, but just for
+fun:
+{% highlight javascript linenos %}
+var second = function(x){
+  return function(y){
+    return y;
+  };
+};
+{% endhighlight %}
+
+###Pair
+Now for the good stuff. So how would you create a pair of things using only functions?
+Well, you could do this: ```λfirst.λsecond.λfunc((func first) second)```
+
+WAT?
+
+The pair function takes two things (```first``` and ```second```) and a function.
+It then applies that function to those two arguments. And you're saying, "How is that a pair?".
+Well, it's not, but what if you didn't supply that third argument, what would you have?
+
+You'd have a function that has access two the free variables ```first``` and ```second```;
+and there's your pair. Sure you can't print it out and see the values, but it's no less
+a pair that ```[1, 2]```.
+
+So now you've got this function, waiting for its third argument. What if you passed it
+```first``` or ```second```? Well you'd get an item out of the pair.
+
+Here's how it works. We're going to supply two arbitrary functions as the first
+and second arguments, then apply the first function.
+
+```(((λa.λb.λf.((f a) b) identity) selfApply) first)```
+
+If we substitute the variables for their arguments we get
+
+```((first identity) selfApply)```
+
+If we expand ```first``` we get:
+
+```((λx.λy.x identity) selfApply)```
+
+The rest is fairly self explanatory. We substitute ```x``` and ```y``` and we get our
+identity function as the result.
+
+In JavaScript, this looks like:
+
+{% highlight javascript %}
+var pair = function(x){
+  return function(y){
+    return function(f){
+      return f(x)(y);
+    };
+  };
+};
+{% endhighlight %}
+
+##Scope, Bound and Free Variables
+Variable scope in λ calculus will be familiar to JavaScript developers because they
+are function scoped. In this function ```λf.λs.(f (s s))``` the variable ```f```
+is in the scope of ```(f (s s))``` while the variable ```s``` is in the scope of
+```(s s)```.
+
+###Bound Variables
+There are two rules that you can use to determine if a variable is considered **bound**
+
+If the expression is a function ```λ<name>.<body>```, then the variable is bound
+if ```<name>``` appears in ```<body>``` or if it is bound in ```body```. For example, in
+```λprison.(prison λprisoner.prisoner)``` both ```prison``` and ```prisoner``` are bound.
+ However, in ```λprison.(prison prisoner)``` only prison is bound.
+
+ If the expression is an application ```(<function><argument>)```, the variable
+ is bound if it is bound in either ```<function>``` or ```<argument>```
