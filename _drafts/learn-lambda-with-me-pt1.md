@@ -14,6 +14,12 @@ I'll be updating it as I complete each chapter._
 _Fair warning: I don't have the best track record with series posts. I get a couple
 in and fizzle. That could very well happen here._
 
+_Caveat: I'm still learning this, and certain aspects are still a little foggy
+for me, especially beta, alpha and eta reductions. My goal with these posts is to
+share what I've learned, and I may have some stuff wrong. One of my hopes is to grow
+in my understanding by putting this out there_
+
+
 ##λ What?
 λ calculus was developed in the 1930s by Alonzo Church as a model for computability,
  and is a central concept in computer sciene. It was developed during the same time
@@ -234,6 +240,9 @@ var pair = function(x){
 {% endhighlight %}
 
 ##Scope, Bound and Free Variables
+With a couple of basic functions under our belts, we can look at variables a bit
+more in depth.
+
 Variable scope in λ calculus will be familiar to JavaScript developers because they
 are function scoped. In this function ```λf.λs.(f (s s))``` the variable ```f```
 is in the scope of ```(f (s s))``` while the variable ```s``` is in the scope of
@@ -247,7 +256,7 @@ if ```<name>``` appears in ```<body>``` or if it is bound in ```body```. For exa
 ```λx.(x λy.y)``` both ```x``` and ```y``` are bound. However, in ```λx.(x y)```
 only ```x``` is bound.
 
- If the expression is an application ```(<function><argument>)```, the variable
+ If the expression is an application ```(<function> <argument>)```, the variable
  is bound if it is bound in either ```<function>``` or ```<argument>```. For example
  in the application ```(λx.x y)``` only ```x``` is bound. However, in ```(λx.x λy.y)```
  both ```x``` and ```y``` are bound.
@@ -261,9 +270,86 @@ only ```x``` is bound.
  In the example above ```λx.(x y)``` the variable ```y``` is free.
 
  If the expression is an application ```(<function> <argument>)``` and the variable
- is not bound in either ```<function>``` nor ```<argument>```, then it is considered
+ is not bound in neither ```<function>``` nor ```<argument>```, then it is considered
  free. Again, in the example above, ```(λx.x y)``` the variable ```y``` is free.
 
  Lastly, if the expresion is only a name ```<name>``` then the variable is free.
 
+###Scoping, Free and Bound Variables in JavaScript
+As it turns out, scoping, free and bound variables work in the same way in JavaScript
+take this code for example:
 
+{% highlight javascript linenos %}
+var weirdAdd = function operandA(a){
+  return function operandB(b){
+    return a + b;
+  }
+}
+
+weirdAdd(2)(3); //=> 5;
+{% endhighlight %}
+
+In the example above ```a``` is scoped to the function ```operandA``` and can be
+accessed by any nested functions, like ```operandB```. Additionally, the variable
+```b``` is scoped to ```operandB```.
+
+What about free and bound variables? Well, we can follow the same rules. If we look
+at the entire expression above, both ```a``` and ```b``` are bound. However what if
+we do this:
+
+{% highlight javascript linenos %}
+var add5 = weirdAdd(5); //=> [Function operandB]
+{% endhighlight%}
+
+The function returned by calling ```weirdAdd``` with a single argument would look
+like this:
+
+{%highlight javascript linenos%}
+function operandB(b){
+  return a + b;
+}
+{% endhighlight %}
+
+Here we can see that ```operandB``` has access ```a``` because of the scope of
+original function ```operandA```, however, ```a``` is free in this situation.
+
+##Reduction
+Now that we know the difference between a free and bound variables, we can look
+at the process of substituting names for their arguments.
+
+Say we have a function: ```λf.((f λh.(h λf.(h f))))```
+
+First of all, that function is nonsense, don't analyze it. Second, avoid reusing
+names, even though it's totally legal; you'll make your life easier.
+
+OK, now that that is out of the way. Let's apply that function and look at how we
+go about substituting variables for arguments.
+
+```(λf.(f λh.(h λf.(h f) bar) baz) foo)```
+
+Because of our scoping rules, the first ```f``` corresponds to the outer bound
+```f```; so  we will substitute that with ```foo```
+
+```(foo λh.(h λf.(h f) bar) baz)```
+
+Next, we have ```h```, we've only got one of those, so the reduction is straight
+forward:
+
+```(foo (baz λf.(baz f) bar))```
+
+And we continue that way until we end up with:
+
+```(foo (baz (baz bar)))```
+
+Now, if ```foo```, ```bar``` and ```baz``` actually corresponded to functions,
+we expand them to their λ definitions, and continue our substitutions until the
+entire expression was evaluated, but this should serve to give a basic idea of
+how reduction works.
+
+##Summary
+So there you have it, a high-level overview of the λ calculus. I've hand-waived
+a couple of key points (reduction, name clashes) here because my primary goal is
+to take the core concepts and tie it back to JavaScript.
+
+The next post in this series will cover conditions and Booleans (roughly half of
+chapter 3).
