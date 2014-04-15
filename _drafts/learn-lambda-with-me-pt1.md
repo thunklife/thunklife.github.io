@@ -9,19 +9,21 @@ category: blog
 ---
 
 #Learn λ Calculus With Me - Foundations
-_I'm currently working through [An Introduction to Functional Programming
-through Lambda Calculus](http://www.amazon.com/gp/product/0486478831). As an
-exercise I'm taking functions from each chapter and implementing them in JavaScript.
-You can check out the project on [GitHub](https://github.com/wilhelmson/lambdajs);
-I'll be updating it as I complete each chapter._
+_For 2014 I decided to dedicate my free time to learning Functional Programming.
+One of the key things I wanted to grasp was λ Calculus, so I'm currently working
+through [An Introduction to Functional Programming through Lambda Calculus]
+(http://www.amazon.com/gp/product/0486478831). As ani exercise I'm taking concepts
+from each chapter and implementing them in JavaScript. You can check out the
+project on [GitHub](https://github.com/wilhelmson/lambdajs); I'll be updating
+it as I complete each chapter._
 
-_Fair warning: I don't have the best track record with series posts. I get a couple
-in and fizzle. That could very well happen here._
+_Caveat The First: I don't have the best track record with series posts. I get
+a couple in and fizzle. That could very well happen here._
 
-_Caveat: I'm still learning this, and certain aspects are still a little foggy
-for me, especially beta, alpha and eta reductions. My goal with these posts is to
-share what I've learned, and I may have some stuff wrong. One of my hopes is to grow
-in my understanding by putting this out_
+_Caveat The Second: I'm still learning this, and certain aspects are still a
+little foggy for me, especially beta, alpha and eta reductions. My goal with
+these posts is to share what I've learned, and I may have some stuff wrong.
+One of my hopes is to grow in my understanding by putting this out_
 
 
 ##λ What?
@@ -31,7 +33,7 @@ in my understanding by putting this out_
  to be equivalant to a Turing machine in terms of modeling computability. That is
  to say, it can be used to describe all aspects of programming.
 
- λ calculus is an extremely simple system based on pure abstraction. As it can
+ λ calculus is an extremely simple system based on pure abstraction. Since it can
  be used to describe all aspects of a programming language, it can be used as a
  'machine code', of sorts, for functional programs; which I'll get into in later
  posts.
@@ -41,7 +43,7 @@ see, later, how it can be used to express numbers, collections, boolean logic an
 much, much more, but it is important to remember that we're talking in the abstract.
 It's just functions all the way down.
 
-##The Anatomy of a λ Expressions
+##The Anatomy of a λ Expression
  λ expressions can be one of three things:
   - A name
   - A function
@@ -82,8 +84,8 @@ There is much more to discuss about λ functions, but without some context, it w
 do much good. So let's look at some simple functions to get our feet wet.
 
 ###Identity
-If you've done any functional programming, the concept of the idenity function won't be
-new to you, if not, it'll look pretty pointless...at first. The identity function has
+If you've done any functional programming, the concept of the **identity** function won't be
+new to you, if not, it'll look pretty pointless...at first. The **identity** function has
 this form: ```λx.x```
 
 Based on what we know, about the anatomy of a λ function, we can say that this function
@@ -94,7 +96,7 @@ So this does what exactly? Oh, well, it takes a value and then returns it.
 
 Lame, right? Don't worry, it'll make sense later.
 
-In JavaScript, idenitity looks like this:
+In JavaScript, **idenitity** looks like this:
 {%highlight javascript linenos %}
 var identity = function (x){
   return x;
@@ -104,8 +106,8 @@ var identity = function (x){
 Lame again, I know.
 
 ###Self Application
-The self application function is another one that seems to be of little value,
-but when you get into recursion, it really shows its power. The self-application
+The **self-application** (**selfApply**) function is another one that seems to be of little value,
+but when you get into recursion, it really shows its power. The **self-application**
 function has this form: ```λs.(s s)```
 
 This function takes a single argument ```s```. The body of the function is a function
@@ -114,9 +116,9 @@ takes ```s``` and applies it to itself.
 
 Consider the following: ```(λs.(s s) λx.x)```
 
-The function application above applies the self-application function to identity.
+The function application above applies the **self-application** function to **identity**.
 The result is that ```s``` is replaced by the argument ```λx.x``` in the function body.
-So identity is applied to identity, the result of which is...identity.
+So identity is applied to **identity**, the result of which is...**identity**.
 
 And now you're thinking, "What a waste of freaking time."
 
@@ -132,12 +134,12 @@ var selfApply = function(s){
 {% endhighlight %}
 
 ###Function Application
-The function application function will probably be more familiar to most JavaScript
+The **function-application** or just **apply** function will probably be more familiar to most JavaScript
 developers because the concept is not too dissimilar to callbacks.
 
-The function application function has this form: ```λf.λa.(f a)```
+The **function-application** function has this form: ```λf.λa.(f a)```
 
-The function application function does exactly what its name implies, it takes a function
+The **function-application** function does exactly what its name implies, it takes a function
 and an argument, and applies the function to that argument.
 
 In JavaScript, we write:
@@ -273,7 +275,7 @@ Let's say we have a pair of things, and we want to get the first one, how would
 you got about that using only functions? Well it would look something like this:
 ```λx.λy.x```.
 
-The _first_ function, takes two arguments and returns the first. I'm not
+The **first** function, takes two arguments and returns the first. I'm not
 going to bother with an example reduction because it's pretty self-explanatory.
 
 In JavaScript it looks like this
@@ -287,10 +289,10 @@ var first = function(x){
 
 ###Second
 I'm going to move on to the next function quickly because they make more sense
-once you see how to create pairs. The _second_ function is almost identical to first,
-except it returns the second argument.
+once you see how to create pairs. The **second** function is almost identical to
+**first**, except it returns the second argument.
 
-The second function has this form: ```λx.λy.y```
+The **second** function has this form: ```λx.λy.y```
 
 I'm sure you've already figured out what it looks like in JavaScript, but just for
 fun:
@@ -308,7 +310,7 @@ Well, you could do this: ```λx.λy.λf((f x) y)```
 
 WAT?
 
-The pair function takes two things, ```x``` and ```y```, and a function ```f```.
+The **pair** function takes two things, ```x``` and ```y```, and a function ```f```.
 It then applies that function to those two arguments. And you're saying, "How is that a pair?".
 Well, it's not, but what if you didn't supply that third argument, what would you have?
 
@@ -317,11 +319,11 @@ and there's your pair. Sure you can't print it out and see the values, but it's 
 a pair.
 
 So now you've got this function, waiting for its third argument. What if you passed it
-the ```first``` or ```second``` function from earlier? Well you'd get an item
+the **first** or **second** function from earlier? Well you'd get an item
 out of the pair.
 
 Here's how it works. We're going to supply two arbitrary functions as the first
-and second arguments, then apply the _first_ function.
+and second arguments, then apply the **first** function.
 
 ```(((λx.λy.λf.((f x) y) identity) selfApply) first)```
 
@@ -334,7 +336,7 @@ If we expand ```first``` we get:
 ```((λx.λy.x identity) selfApply)```
 
 The rest is fairly self explanatory. We substitute ```x``` and ```y``` and we get our
-identity function as the result.
+**identity** function as the result.
 
 In JavaScript, this looks like:
 
