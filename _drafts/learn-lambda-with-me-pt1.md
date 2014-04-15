@@ -149,7 +149,7 @@ var apply = function(f){
 };
 {% endhighlight %}
 
-##Scope, Bound and Free Variables
+##All About Variables
 With a couple of basic functions under our belts, we can look at variables a bit
 more in depth.
 
@@ -185,7 +185,7 @@ only ```x``` is bound.
 
  Lastly, if the expresion is only a name ```<name>``` then the variable is free.
 
-###Scoping, Free and Bound Variables in JavaScript
+###Variables in JavaScript
 As it turns out, scoping, free and bound variables work in the same way in JavaScript
 take this code for example:
 
@@ -193,8 +193,8 @@ take this code for example:
 var weirdAdd = function operandA(a){
   return function operandB(b){
     return a + b;
-  }
-}
+  };
+};
 
 weirdAdd(2)(3); //=> 5;
 {% endhighlight %}
@@ -273,7 +273,7 @@ Let's say we have a pair of things, and we want to get the first one, how would
 you got about that using only functions? Well it would look something like this:
 ```λx.λy.x```.
 
-The first function, also called const, takes two arguments and returns the first. I'm not
+The _first_ function, takes two arguments and returns the first. I'm not
 going to bother with an example reduction because it's pretty self-explanatory.
 
 In JavaScript it looks like this
@@ -287,7 +287,7 @@ var first = function(x){
 
 ###Second
 I'm going to move on to the next function quickly because they make more sense
-once you see how to create pairs. The second function is almost identical to first,
+once you see how to create pairs. The _second_ function is almost identical to first,
 except it returns the second argument.
 
 The second function has this form: ```λx.λy.y```
@@ -314,14 +314,14 @@ Well, it's not, but what if you didn't supply that third argument, what would yo
 
 You'd have a function that has access two the free variables ```x``` and ```y```;
 and there's your pair. Sure you can't print it out and see the values, but it's no less
-a pair than ```[1, 2]```.
+a pair.
 
 So now you've got this function, waiting for its third argument. What if you passed it
 the ```first``` or ```second``` function from earlier? Well you'd get an item
 out of the pair.
 
 Here's how it works. We're going to supply two arbitrary functions as the first
-and second arguments, then apply the first function.
+and second arguments, then apply the _first_ function.
 
 ```(((λx.λy.λf.((f x) y) identity) selfApply) first)```
 
@@ -338,7 +338,7 @@ identity function as the result.
 
 In JavaScript, this looks like:
 
-{% highlight javascript %}
+{% highlight javascript linenos %}
 var pair = function(x){
   return function(y){
     return function(f){
@@ -360,4 +360,5 @@ just plain shouldn't do it. Things are simpler when you don't have to consider w
 version of variable ```h``` is in scope at what point during a reduction.
 
 The next post in this series will cover conditions and Booleans (roughly half of
-chapter 3).
+chapter 3 in [An Introduction to Functional Programming
+through Lambda Calculus](http://www.amazon.com/gp/product/0486478831)).

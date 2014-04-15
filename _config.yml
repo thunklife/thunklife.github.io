@@ -14,6 +14,7 @@ future: true
 
 auto: true
 permalink: none
+markdown: kramdown
 pygments: true
 server: true
 exclude:
