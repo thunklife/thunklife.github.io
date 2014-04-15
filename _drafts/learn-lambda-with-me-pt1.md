@@ -118,7 +118,7 @@ Consider the following: ```(λs.(s s) λx.x)```
 
 The function application above applies the **self-application** function to **identity**.
 The result is that ```s``` is replaced by the argument ```λx.x``` in the function body.
-So identity is applied to **identity**, the result of which is...**identity**.
+So **identity** is applied to **identity**, the result of which is **identity**.
 
 And now you're thinking, "What a waste of freaking time."
 
@@ -135,7 +135,7 @@ var selfApply = function(s){
 
 ###Function Application
 The **function-application** or just **apply** function will probably be more familiar to most JavaScript
-developers because the concept is not too dissimilar to callbacks.
+developers because we're so used to passing around functions for callbacks..
 
 The **function-application** function has this form: ```λf.λa.(f a)```
 
@@ -161,7 +161,7 @@ is in the scope of ```(f (s s))``` while the variable ```s``` is in the scope of
 ```(s s)```.
 
 ###Bound Variables
-There are two rules that you can use to determine if a variable is considered **bound**
+There are two rules that you can use to determine if a variable is considered _bound_.
 
 If the expression is a function ```λ<name>.<body>```, then the variable is bound
 if ```<name>``` appears in ```<body>``` or if it is bound in ```body```. For example, in
@@ -174,7 +174,7 @@ only ```x``` is bound.
  both ```x``` and ```y``` are bound.
 
 ###Free Variables
- There are three rules you can use to determine if a variable is **free**. As you
+ There are three rules you can use to determine if a variable is _free_. As you
  may have guessed, they are the opposite of the rules for bound variables.
 
  If the expression is a function ```λ<name>.<body>```, and the variable name is
@@ -182,13 +182,13 @@ only ```x``` is bound.
  In the example above ```λx.(x y)``` the variable ```y``` is free.
 
  If the expression is an application ```(<function> <argument>)``` and the variable
- is not bound in neither ```<function>``` nor ```<argument>```, then it is considered
- free. Again, in the example above, ```(λx.x y)``` the variable ```y``` is free.
+ is bound in neither ```<function>``` nor ```<argument>```, then it is considered
+ free. For example, in the application ```(λx.x y)``` the variable ```y``` is free.
 
  Lastly, if the expresion is only a name ```<name>``` then the variable is free.
 
 ###Variables in JavaScript
-As it turns out, scoping, free and bound variables work in the same way in JavaScript
+As it turns out, scoping, free and bound variables work in the same way in JavaScript;
 take this code for example:
 
 {% highlight javascript linenos %}
@@ -230,18 +230,18 @@ Now that we know the difference between a free and bound variables, we can look
 at the process of substituting names for their arguments.
 
 If an application ```(λ<name>.<body> <arguments>)``` we reduce the expression by
-replacing all instances of ```<name>``` in ```<body>``` which are free.
+replacing all free instances of ```<name>``` in ```<body>``` with ```<argument>```.
 
 ###Reduction With Unique Names
 Let's look at an example of the function application function from before:
 
-```((λf.λa(f a) λs.(s s) λx.x)```
+```((λf.λa(f a) λs.(s s)) λx.x)```
 
 To reduce this function we start with the variable ```f``` and we replace it with
-the argument ```λs.(s s)```, resulting in ```λa.(λs.(s s) a)```.
+the argument ```λs.(s s)```, resulting in ```(λa.(λs.(s s) a) λx.x)```.
 
 We continue this process with the variable ```a``` and replace it with ```λx.x```
-giving ```(λs.(s s) λ.x.x)``` which is the same as the example of the self-application
+giving ```(λs.(s s) λ.x.x)``` which is the same as the example of the **self-applicationi**
 function. Just for fun, let's finish the reduction.
 
 ```(λs.(s s) λx.x)``` becomes ```(λx.x λx.x)``` which ends at ```λx.x```
@@ -335,8 +335,8 @@ If we expand ```first``` we get:
 
 ```((λx.λy.x identity) selfApply)```
 
-The rest is fairly self explanatory. We substitute ```x``` and ```y``` and we get our
-**identity** function as the result.
+Now we replace ```x``` with ```identity``` and ```y``` with ```selfApply```
+and we get our **identity** function as the result.
 
 In JavaScript, this looks like:
 
