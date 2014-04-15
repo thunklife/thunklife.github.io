@@ -11,11 +11,11 @@ category: blog
 #Learn λ Calculus With Me - Foundations
 _For 2014 I decided to dedicate my free time to learning Functional Programming.
 One of the key things I wanted to grasp was λ Calculus, so I'm currently working
-through [An Introduction to Functional Programming through Lambda Calculus]
-(http://www.amazon.com/gp/product/0486478831). As ani exercise I'm taking concepts
-from each chapter and implementing them in JavaScript. You can check out the
-project on [GitHub](https://github.com/wilhelmson/lambdajs); I'll be updating
-it as I complete each chapter._
+through [An Introduction to Functional Programming through Lambda Calculus](http://www.amazon.com/gp/product/0486478831).
+As an exercise I'm taking concepts from each chapter and implementing them in
+JavaScript. You can check out the project on
+[GitHub](https://github.com/wilhelmson/lambdajs); I'll be updating it as I
+complete each chapter._
 
 _Caveat The First: I don't have the best track record with series posts. I get
 a couple in and fizzle. That could very well happen here._
