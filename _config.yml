@@ -14,8 +14,8 @@ future: true
 
 auto: true
 permalink: none
-markdown: kramdown
 pygments: true
+markdown: kramdown
 server: true
 exclude:
 - README.md
