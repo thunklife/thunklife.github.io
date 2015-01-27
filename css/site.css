@@ -263,7 +263,9 @@ li .recent-post {
 }
 
 .cv section{
-  margin: 40px 0;
+  margin: 20px 0;
+  padding-top: 20px;
+  border-top: 1px solid #BDC3C7;
 }
 
 .cv .meta{
