@@ -273,6 +273,10 @@ li .recent-post {
   display: inline-block;
 }
 
+.cv .meta p{
+  margin 0;
+}
+
 .cv .description{
   position: relative;
   display: inline-block;
