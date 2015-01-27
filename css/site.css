@@ -256,3 +256,24 @@ li .recent-post {
     list-style-type: none;
     padding: 0;
     margin: 0; }
+.cv h1{
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
+
+.cv .meta{
+  position: absolute;
+  display: inline-block;
+  width: 33%;
+}
+
+.cv .description{
+  position: relative;
+  display: inline-block;
+  width: 65%;
+}
+
+.cv .bingo{
+  font-size:.8rem;
+}
+
