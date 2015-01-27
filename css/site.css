@@ -271,6 +271,7 @@ li .recent-post {
   position: relative;
   display: inline-block;
   width: 65%;
+  left: 33%;
 }
 
 .cv .bingo{
