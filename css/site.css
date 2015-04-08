@@ -306,3 +306,8 @@ li .recent-post {
   margin-bottom: 10px;
   border-bottom: 1px solid #BDC3C7;
 }
+
+.talks article:last-of-type{
+  margin-bottom: 0;
+  border-bottom: none;
+}
