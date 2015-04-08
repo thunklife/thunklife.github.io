@@ -61,9 +61,10 @@ nav {
     font-size: 1.5rem; }
   nav .brand .icon-home{
     display: none;
+    margin-left: 10px;
   }
   nav .brand:hover .icon-home{
-    display: block;
+    display: inline;
   }
   nav .links a {
     padding: 5px 10px;
