@@ -59,13 +59,6 @@ nav {
   nav .brand {
     float: left;
     font-size: 1.5rem; }
-  nav .brand .icon-home{
-    display: none;
-    margin-left: 10px;
-  }
-  nav .brand:hover .icon-home{
-    display: inline;
-  }
   nav .links a {
     padding: 5px 10px;
     margin-left: 10px;
