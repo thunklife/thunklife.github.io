@@ -312,6 +312,6 @@ li .recent-post {
   border-bottom: none;
 }
 
-.talks a:hover image{
+.talks a:hover img{
   border-color: #e74c3c;
 }
