@@ -302,7 +302,7 @@ li .recent-post {
   line-height: auto;
 }
 
-.talks article:first-child{
+.talks article{
   margin-bottom: 20px;
   border-bottom: 1px solid #BDC3C7;
 }
