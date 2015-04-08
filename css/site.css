@@ -62,7 +62,7 @@ nav {
   nav .brand .icon-home{
     display: none;
   }
-  nav .brand .icon-home{
+  nav .brand:hover .icon-home{
     display: block;
   }
   nav .links a {
