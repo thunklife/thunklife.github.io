@@ -311,3 +311,7 @@ li .recent-post {
   margin-bottom: 0;
   border-bottom: none;
 }
+
+.talks a:hover image{
+  border-color: #e74c3c;
+}
