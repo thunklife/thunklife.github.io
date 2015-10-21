@@ -21,7 +21,7 @@ to help anybody that is in the same place that I was.
 In order to understand what is going on, we first need to have an understanding of kinds. Just as every expression in Haskell has a type, every type
 in Haskell has a kind. The simplest way I've found to think of kinds is as the type of types, and we can query the kind of a type using GHCi.
 
-```
+{% highlight bash %}
 Prelude> :k Char
 Char :: *
 
@@ -30,7 +30,7 @@ Prelude> :k []
 
 Prelude> :k (,)
 (,) :: * -> * -> *
-```
+{% endhighlight %}
 
 The kind of a type is denoted using a `*`. Concrete types like `Char` have kind `*`. The `List` type, however, has the kind `* -> *` which looks a lot like
 the type signature for a function. That's because type constructors _are_ functions, so we can read `* -> *` as "this type takes some concrete type `*` and returns a concrete type."
@@ -40,24 +40,24 @@ Tuples have the kind `* -> * -> *`, and you might have guessed already that mean
 
 Since type constructors are functions, we can partially apply them:
 
-```
+{% highlight bash %}
 Prelude> :k (,) Int
 (,) Int :: * -> *
 
 Prelude> :k (,) Int String
 (,) Int String :: *
-```
+{% endhighlight %}
 In the first example we provide one of the required type arguments for a tuple, and the result has kind `* -> *`. In the second, we provide both type arguments and get back a concrete type.
 
 Here is another example, that can cause some confusion:
 
-```
+{% highlight bash %}
 Prelude> :k Either
 Either :: * -> * -> *
 
 Prelude> :k Either Int
 Either Int :: * -> *
-```
+{% endhighlight %}
 
 The strange thing here is that `Either a b` is a sum type. Unlike a tuple (which is a product), a value of `Either a b` can only be one of two things `Left a` or `Right b`. However, the kind of
 the Either type is still `* -> * -> *`; the type is not concrete until both type arguments are provided.
@@ -68,7 +68,7 @@ There is a special relationship between typeclasses and kinds, and it is importa
 
 Typeclass definitions can constrain the kind of the type variable they require
 
-```
+{% highlight bash %}
 Prelude> :i Foldable
 class Foldable (t :: * -> *) where
     foldr :: (a -> b -> b) -> t a -> b -> b
@@ -76,7 +76,7 @@ class Foldable (t :: * -> *) where
 Prelude> :i Functor
 class Functor (f :: * -> *) where
     fmap :: (a -> b) -> f a -> f b
-```
+{% endhighlight %}
 Both classes require that any instances be of kind `* -> *`. This means we can't have a Functor instance of `Char` or `Int`, nor can we have one for `(,)` or `Either`; none of those types have the right kind.
 But we can make `Either` or `(,)` the right kind by partially applying it. We don't need to provide a concrete type though, we can simply provide a type variable
 
@@ -92,7 +92,7 @@ Now we have instances of Functor for our types, but what does that mean for the 
 
 Take a look at the types for `fmap` and `foldr` again
 
-```
+{% highlight bash %}
 Prelude> :i Foldable
 class Foldable (t :: * -> *) where
     foldr :: (a -> b -> b) -> t a -> b -> b
@@ -100,7 +100,7 @@ class Foldable (t :: * -> *) where
 Prelude> :i Functor
 class Functor (f :: * -> *) where
     fmap :: (a -> b) -> f a -> f b
-```
+{% endhighlight %}
 
 `foldr` requires a `t a` where `t` is kind `* -> *`. The `a` in `t a`, in the case of `Either a b` and `(,)` necessarily points to the second type variable; that is all it could be. Neither typeclass knows about that the type
 you are using has previously applied type variables; it only knows about "final" one.
@@ -142,7 +142,7 @@ I've had to jump through a few hoops since `Either a` is already an instance of 
 
 If we attempt to load that into GHCi
 
-```
+{% highlight bash %}
 Prelude> :l Test.hs
 [1 of 1] Compiling Test             ( Test.hs, interpreted )
 
@@ -178,7 +178,7 @@ Test.hs:11:30:
     In the first argument of ‘f’, namely ‘a’
     In the first argument of ‘Left’, namely ‘(f a)’
 Failed, modules loaded: none.
-```
+{% endhighlight %}
 
 The compiler expected type `a`, but found type `b`. Another interesting thing to note is the type of `fmap`.
 ```
@@ -191,10 +191,10 @@ This is a specialized type for `fmap` for Either and from this type it is clear 
 
 Right I almost forgot, this whole thing started because
 
-```
+{% highlight bash %}
 Prelude> length (1, 2)
 1
-```
+{% endhighlight %}
 
 Clearly this is madness! I mean, we clearly have a 2 tuple so the length must be 2. Seriously, this is JavaScript level fuckery.
 
