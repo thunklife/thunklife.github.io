@@ -200,7 +200,7 @@ Prelude> length (1, 2)
 1
 {% endhighlight %}
 
-Clearly this is madness! I mean, we clearly have a 2 tuple so the length must be 2. Seriously, this is JavaScript level fuckery.
+Clearly this is madness! I mean, we have a 2 tuple, I can see both elements!. Seriously, this is JavaScript-level fuckery.
 
 Nah.
 
