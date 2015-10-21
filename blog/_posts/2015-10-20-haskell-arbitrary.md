@@ -47,7 +47,8 @@ Prelude> :k (,) Int
 Prelude> :k (,) Int String
 (,) Int String :: *
 {% endhighlight %}
-In the first example we provide one of the required type arguments for a tuple, and the result has kind `* -> *`. In the second, we provide both type arguments and get back a concrete type.
+
+In the first example we provide one of the required type variables for a tuple, and the result has kind `* -> *`. In the second, we provide both type variables and get back a concrete type.
 
 Here is another example, that can cause some confusion:
 
@@ -60,7 +61,7 @@ Either Int :: * -> *
 {% endhighlight %}
 
 The strange thing here is that `Either a b` is a sum type. Unlike a tuple (which is a product), a value of `Either a b` can only be one of two things `Left a` or `Right b`. However, the kind of
-the Either type is still `* -> * -> *`; the type is not concrete until both type arguments are provided.
+the Either type is still `* -> * -> *`; the type is not concrete until both type variables are provided.
 
 ##Kinds and Typeclasses
 
