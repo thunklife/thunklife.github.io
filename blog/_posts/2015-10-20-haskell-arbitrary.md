@@ -200,7 +200,7 @@ Prelude> length (1, 2)
 1
 {% endhighlight %}
 
-Clearly this is madness! I mean, we have a 2 tuple, I can see both elements!. Seriously, this is JavaScript-level fuckery.
+Clearly this is madness! I mean, we have a 2 tuple! I can see both elements! Seriously, this is JavaScript-level fuckery.
 
 Nah.
 
