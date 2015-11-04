@@ -1,12 +1,9 @@
 ---
 layout: post
-excerpt: There has been a lot of debate recently about how certain instances of
-Foldable and Functor work. Plenty of people much smarter than me have weighed in
-and given their opinion on the subject.
+excerpt: There has been a lot of debate recently about how certain instances of Foldable and Functor work. Plenty of people much smarter than me have weighed in and given their opinion on the subject.
 post-title: On Types, Kinds and The Arbitrary Nature of Haskell 
 category: blog
 ---
-
 #On Types, Kinds and The Arbitrary Nature of Haskell 
 
 There has been a lot of debate recently about how the `Either a` and `(,) a`
