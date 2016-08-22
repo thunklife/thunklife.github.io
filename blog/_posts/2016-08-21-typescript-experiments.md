@@ -42,7 +42,7 @@ data Maybe a = Nothing | Just a
 {% endhighlight %}
 
 Here we've got two data types: `Jibberish` and `Maybe a`. A value of type
-`Jibberish` is either `Foo` or `Bar` or `Baz` or `Qux`. The "or" key here. The
+`Jibberish` is either `Foo`, `Bar`, `Baz` or `Qux`. The "or" is key here. The
 second example is a little more interesting. The `a` is a type variable, in C#
 or TypeScript you would write ```Maybe<T>```. A value of `Maybe a` can be
 `Nothing` or `Just a`. The fist option carries no data, while the second holds
@@ -98,7 +98,7 @@ don't have to be different types, but they can be.
 
 That should be pretty simple to define in TypeScript:
 
-{% highlight c# %}
+{% highlight typescript %}
 interface Functor<F> {
   fmap<A, B>: (f: (arg: A) => B): Functor<F>
 }
@@ -125,7 +125,7 @@ is generic and that generic thing needs to have a constructor that takes one
 argument," which is essentially was kind `* -> *` means. However, we can get
 close by creating another interface:
 
-{% highlight c# %}
+{% highlight typescript %}
 interface StarToStar<T> {
   value: T
 }
@@ -138,7 +138,7 @@ specify a constructor function so how that value gets set is implied.
 
 With that interface defined we can redefine the Functor interface:
 
-{% highlight c# %}
+{% highlight typescript %}
 interface StarToStar<T> {
   value: T
 }
@@ -161,7 +161,7 @@ that Maybe is an instance of Functor, unfortunately,
 Functor interface. However, I could have each of the class that `Maybe<T>` is
 composed of implement it and get basically the same thing.
 
-{% highlight c# %}
+{% highlight typescript %}
 interface StarToStar<T> {
   value: T
 }
@@ -197,7 +197,7 @@ We now have a way to generalize applying a function to values inside of
 of others. We can then write a standalone function for `fmap` that works on any
 Functor rather than having to use the dot notation above.
 
-{% highlight c# %}
+{% highlight typescript %}
 function fmap<F extends StarToStar<any>, A, B>(f: (a: A) => B, fa: Functor<F>): Functor<F> {
   return fa.fmap(f);
 }
