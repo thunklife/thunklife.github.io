@@ -100,14 +100,14 @@ That should be pretty simple to define in TypeScript:
 
 {% highlight typescript %}
 interface Functor<F> {
-  fmap<A, B>: (f: (arg: A) => B): Functor<F>
+  fmap<A, B>(f: (arg: A) => B): Functor<F>
 }
 {% endhighlight %}
 
 Ok, that's a little different so let's step through it. We still have a
 `Functor<F>`, and a function from `A` values to `B` values, TypeScript just
 requires us to give names to those variables a little differently. I had to
-tweak the signature of `fmap` a little bit and drop the second argument to since
+tweak the signature of `fmap` a little bit and drop the second argument since
 this interface would be implemented by some class which implies the Functor
 (`f a`) we're operating on is the class implementing this interface.
 
@@ -144,7 +144,7 @@ interface StarToStar<T> {
 }
 
 interface Functor<F extends StarToStar<any>> {
-  fmap<A, B>: (f: (arg: A) => B): Functor<F>
+  fmap<A, B>(f: (arg: A) => B): Functor<F>
 }
 {% endhighlight %}
 
@@ -167,7 +167,7 @@ interface StarToStar<T> {
 }
 
 interface Functor<F extends StarToStar<any>> {
-  fmap<A, B>: (f: (arg: A) => B): Functor<F>
+  fmap<A, B>(f: (arg: A) => B): Functor<F>
 }
 
 class Just<T> implements Functor<Just<T>>{
@@ -178,7 +178,7 @@ class Just<T> implements Functor<Just<T>>{
   }
 }
 
-class Nothing implement Functor<Nothing>{
+class Nothing implements Functor<Nothing>{
   value;
   fmap(f) {
     return new Nothing();
