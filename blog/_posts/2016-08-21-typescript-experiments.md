@@ -211,13 +211,20 @@ const stillNothing = fmap((x) => x.toString(), nothing); // => Nothing
 
 ## Summary
 
-TypeScript is a huge improvement to JavaScript if you're looking for type
-safety. If you're coming from JavaScript, it's a huge improvement. However, if
-you've used Haskell or PureScript or Elm, you'll notice a lot of extra
-boilerplate. You can do pretty well trying to approximate things from those
-languages in TypeScript but I for one felt the design of the language pushing
-back a bit. The big question for me is whether or not the advantages of these
-techniques will be as obvious to other developers who see TypeScript as a way
-to write C# (and therefore very OO code) in the browser. Of course that is
-coming from someone trying wishing they could write very functional code in
-the browser using a language that, to my eyes, wasn't designed for it.
+If you're coming from JavaScript, with no experience with Haskell, PureScript
+or Elm, TypeScript will seem magical. There is some extra boilerplate to deal
+with but the payoff is huge; I don't imagine you'll notice it after some time
+with it. However, if you've used Haskell, PureScript or Elm, then you've seen
+the same, or better, features with a lot less cruft. If you're like me, you'll
+miss minimal syntax but eventually get over it because TypeScript is a nice
+language, gets you a lot of what you want, and is familiar enough that your team
+won't feel like they got to put the brakes on building a product in order to
+learn the language.
+
+You can do pretty well trying to approximate things from those languages in
+TypeScript but I for one felt the design of the language pushing back a bit.
+The big question for me is whether or not the advantages of these techniques
+will be as obvious to other developers who see TypeScript as a way to write C#
+(and therefore very OO code) in the browser. Of course that is coming from
+someone trying wishing they could write very functional code in the browser
+using a language that, to my eyes, wasn't designed for it.
