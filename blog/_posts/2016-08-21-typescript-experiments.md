@@ -1,8 +1,6 @@
 ---
 layout: post
-excerpt: My team recently decided on TypeScript for a new project. I was really
-pushing for PureScript, but you can't win them all. I wonder though, can you
-recreate some of things from PureScript/Haskell in TypeScript?
+excerpt: My team recently decided on TypeScript for a new project. I was really pushing for PureScript, but you can't win them all. I wonder though, can you recreate some of things from PureScript/Haskell in TypeScript?
 post-title: Experiments In TypeScript
 ---
 
