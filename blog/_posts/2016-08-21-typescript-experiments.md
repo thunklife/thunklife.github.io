@@ -137,6 +137,7 @@ Now we have an interface for something that has a single value. It doesn't
 specify a constructor function so how that value gets set is implied.
 
 With that interface defined we can redefine the Functor interface:
+
 {% highlight c# %}
 interface StarToStar<T> {
   value: T
@@ -169,7 +170,6 @@ interface Functor<F extends StarToStar<any>> {
   fmap<A, B>: (f: (arg: A) => B): Functor<F>
 }
 
-{% highlight typescript %}
 class Just<T> implements Functor<Just<T>>{
   value;
   constructor(a :T) { this.value = a; }
