@@ -7,7 +7,7 @@ post-title: Experiments In TypeScript
 # Experiments In TypeScript
 
 Recently my team had a chance to look at a bunch of new technologies for a new
-frontend project will be starting. I was really pushing for a
+frontend project we will be starting. I was really pushing for a
 [PureScript](http://www.purescript.org/) solution, but at the end of the day it
 just wasn't in the cards. When the dust had settled we agreed on solution using
 [React](https://facebook.github.io/react/) and
@@ -46,10 +46,10 @@ Here we've got two data types: `Jibberish` and `Maybe a`. A value of type
 second example is a little more interesting. The `a` is a type variable, in C#
 or TypeScript you would write ```Maybe<T>```. A value of `Maybe a` can be
 `Nothing` or `Just a`. The fist option carries no data, while the second holds
-the a value of type `a`. Maybe is used in place of `null`; it's used to indicate
+a value of type `a`. Maybe is used in place of `null`; it's used to indicate
 that a function may not complete successfully.
 
-TypeScript as support for sum types, and when you combine them with your own
+TypeScript has support for sum types, and when you combine them with your own
 interfaces/classes you can get pretty close to something like what you get in
 Haskell:
 
@@ -65,7 +65,7 @@ type Maybe<T> = Nothing | Just<T>
 {% endhighlight %}
 
 Unfortunately TypeScript doesn't have anything like Haskell data constructors,
-so I had to create classes instead. If you're new to TypeScript, like me that
+so I had to create classes instead. If you're new to TypeScript, like me, that
 last bit is a type alias; rather than having to say `Nothing | Just<T>` in all
 of our type signatures, we can just say `Maybe<T>`.
 
@@ -89,9 +89,9 @@ class Functor f where
   fmap :: (a -> b) -> f a -> f b
 {% endhighlight %}
 
-This says we've got some Functor `f` and it's interface is a function called
+This says we've got some Functor `f` and its interface is a function called
 `fmap`. `fmap` takes two arguments. The first is a function that takes values
-of some time (called `a`) and returns values of some potentially different type
+of some type (called `a`) and returns values of some potentially different type
 (called `b`). The second is a Functor that holds `a` values ('f a'). The return
 type is a Functor that holds `b` values (`f b`). One important note `a` & `b`
 don't have to be different types, but they can be.
@@ -122,7 +122,7 @@ it will be of type `B`.
 
 As far as I can tell, TypeScript doesn't have a way of saying, "This interface
 is generic and that generic thing needs to have a constructor that takes one
-argument," which is essentially was kind `* -> *` means. However, we can get
+argument," which is essentially what kind `* -> *` means. However, we can get
 close by creating another interface:
 
 {% highlight typescript %}
@@ -156,7 +156,7 @@ care about what the `F` you supply it is.
 
 Next I wanted to see if I could take what I learned about sum types and see
 how I could implement the Functor interface I just defined. In Haskell you say
-that Maybe is an instance of Functor, unfortunately,
+that Maybe is an instance of Functor; unfortunately,
 `Maybe<T> = Nothing | Just<T>` is just an alias so I can't have it implement the
 Functor interface. However, I could have each of the class that `Maybe<T>` is
 composed of implement it and get basically the same thing.
