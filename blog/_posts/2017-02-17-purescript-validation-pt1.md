@@ -1,3 +1,9 @@
+---
+layout: post
+excerpt: There are a number of ways that we can signal that an error occurred using Algebraic Data Types in PureScript, the most well know are `Maybe` and `Either`. Each come with their own unique drawbacks, but is there another option?
+post-title: Validating Inputs With PureScript Validation - Part 1
+---
+
 # Validating Inputs With PureScript Validation - Part 1
 
 There are a number of ways that we can signal that an error occurred using
@@ -7,7 +13,7 @@ Unfortunately, any context about the failure is lost because `Nothing` is
 nullary - no data comes along with it. We can improve on that a bit by using
 `Either`. Like `Maybe`, `Either` has two data constructors: `Left` and `Right`,
 with `Left` typically used to indicate failue and `Right` used to indicated
-success. Both `Left` and `Right` bring extra data along with them so we can
+spurescript-uccess. Both `Left` and `Right` bring extra data along with them so we can
 provide some context for the failure.
 
 {% highlight haskell %}
