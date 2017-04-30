@@ -1,12 +1,12 @@
-title: wilhelmson
+title: thunklife
 description: Describe your website here.
 # Change url to your domain. Leave localhost server or blank when working locally.
-url: wilhelmson.github.io
+url: thunklife.website
 
 # Owner/author information
 owner:
-  name: wilhelmson
-  email: j.williamson.sd@gmail.com
+  name: thunklife
+  email: jessewilliamson@fastmail.fm
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone: America/Los_Angeles
@@ -20,4 +20,3 @@ server: true
 exclude:
 - README.md
 - Rakefile
-
