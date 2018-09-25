@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://use.fontawesome.com/445a7275ad.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>thunklife - Validating Inputs With PureScript Validation - Part 1</title>
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/site.css">
+    <link rel="stylesheet" href="../static/css/pygments.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <nav>
+          <div class="brand">
+            <a href="../">thunklife</a>
+          </div>
+          <div class="links">
+            <a href="../blog.html" title="Posts"><i class="fa fa-file"></i>blog</a>
+            <a href="../talks.html" title="Talks"><i class="fa fa-quote-left"></i>talks</a>
+            <a href="../cv.html" title="CV"><i class="fa fa-address-card"></i>cv</a>
+            <a href="https://twitter.com/thunk_life" title="Twitter"><i class="fa fa-twitter"></i>twitter</a>
+            <a href="https://github.com/thunklife" title="Github"><i class="fa fa-github"></i>github</a>
+            <!-- <a href="/feed.xml" title="RSS"><i class="icon-rss"></i></a> -->
+          </div>
+        </nav>
+      </header>
+      <article id="main">
+        <h1>Validating Inputs With PureScript Validation - Part 1</h1>
+
+<div class="info">
+    
+</div>
+
+<article class="post-content">
+  <p>There are a number of ways that we can signal that an error occurred using Algebraic Data Types in PureScript, the most well know are <code>Maybe</code> (<a href="https://pursuit.purescript.org/packages/purescript-maybe/2.0.1">purescript-maybe</a>) and <code>Either</code> (<a href="https://pursuit.purescript.org/packages/purescript-either/2.1.0">purescript-either</a>) With <code>Maybe</code> we can use the <code>Nothing</code> data constructor to signal failure but any context about the failure is lost because <code>Nothing</code> is nullary - no data comes along with it. We can improve on that a bit by using <code>Either</code>. Like <code>Maybe</code>, <code>Either</code> has two data constructors: <code>Left</code> and <code>Right</code>, with <code>Left</code> typically used to indicate failue and <code>Right</code> used to indicated spurescript-uccess. Both <code>Left</code> and <code>Right</code> bring extra data along with them so we can provide some context for the failure.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">greaterThanTen ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Int</span>
+greaterThanTen n <span class="fu">=</span>
+  <span class="kw">case</span> n <span class="fu">&lt;</span> <span class="dv">11</span> <span class="kw">of</span>
+    true <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
+    false <span class="ot">-&gt;</span> <span class="dt">Maybe</span> n
+
+<span class="ot">greaterThanTwenty ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> <span class="dt">Int</span>
+greaterThanTwenty n <span class="fu">=</span>
+  <span class="kw">case</span> n <span class="fu">&lt;</span> <span class="dv">21</span> <span class="kw">of</span>
+    true <span class="ot">-&gt;</span> <span class="dt">Left</span> <span class="st">&quot;Must be greater than 20&quot;</span>
+    false <span class="ot">-&gt;</span> <span class="dt">Right</span> n
+    </code></pre></div>
+<p>Cool. So we have two ways to validate an input: we can use <code>Maybe</code> if we don’t care about why our function failed, and we can use <code>Either</code> if we want to give the caller some more information.</p>
+<p>But what if we need to validate more than one argument? Say, for example, we had a type for a <code>Person</code>, but we needed to enforce some invariant like, the name can’t be empty, or they must be over 18?</p>
+<h2 id="modeling-the-scenario">Modeling The Scenario</h2>
+<p>In this scenario we have a <code>Person</code>, but we don’t expose the data constructor directly because we want to verify some inputs before hand.</p>
+<p>{% highlight haskell %}</p>
+<p>newtype FirstName = FirstName String newtype LastName = LastName String newtype Age = Age Int</p>
+<p>data Person = Person FirstName LastName Age</p>
+<p>{% endhighlight %}</p>
+<p>We can ensure we only construct <code>Person</code> with validate data by providing smart constructors, functions that perform the validations we want, for each field. These functions take the input and use a datatype like <code>Maybe</code> or <code>Either</code> to account for failure. Here are some smart constructors that use <code>Maybe</code>:</p>
+<p>{% highlight haskell %}</p>
+<p>firstRequired :: String -&gt; Maybe FirstName firstRequired “” = Nothing firstRequired s = Just (FirstName s)</p>
+<p>lastRequired :: String -&gt; Maybe LastName lastRequired “” = Nothing lastRequired s = Just (LastName s)</p>
+<p>ageGT18 :: Int -&gt; Maybe Age ageGTFive n = case n &lt; 18 of true -&gt; Nothing false -&gt; Just (Age n)</p>
+<p>{% endhighlight %}</p>
+<p>Ok, we’ve got functions for each field in our <code>Person</code> type, but we still a way to glue all of those checks together. Luckily, we can use the <code>Applicative</code> (<a href="https://pursuit.purescript.org/packages/purescript-prelude/2.4.0/docs/Control.Applicative#t:Applicative">Pursuit</a>) instance of <code>Maybe</code> to do just that:</p>
+<p>{% highlight haskell %}</p>
+<p>validatePerson :: String -&gt; String -&gt; Int -&gt; Maybe Person validatePerson f l a = Person &lt;$&gt; firstRequired f &lt;<em>&gt; lastRequired l &lt;</em>&gt; ageGTFive a</p>
+<p>{% endhighlight %}</p>
+<p>We’re using the <code>Applicative</code> instance for <code>Maybe</code> here to allow us to, essentially, map a bunch of functions that return <code>Maybe</code> values over our <code>Person</code> constructor; a function that takes <code>String</code>s and an <code>Int</code>. So what happens when we use this?</p>
+<p>{% highlight bash %}</p>
+<blockquote>
+<p>validatePerson “John” “Jacob” 19 (Just Person John Jacob 19)</p>
+</blockquote>
+<blockquote>
+<p>validatePerson “John” “” 19 Nothing</p>
+</blockquote>
+<p>{% endhighlight %}</p>
+<p>That’s pretty good, but we’ll get the same <code>Nothing</code> value each time a try to construct an invalid <code>Person</code>; not providing a first name fails in the same way as not providing a last name, etc.</p>
+<p>With <code>Either</code> we can provide more information about a failure, so we create a <code>PersonError</code> datatype to use in our smart constructors. If the input is valid, we’ll use the <code>Right</code> data constructor and we’ll use <code>Left</code> for our errors.</p>
+<p>{% highlight haskell %}</p>
+<p>data PersonError = FirstNameRequired | LastNameRequired | Under18</p>
+<p>firstRequired :: String -&gt; Either PersonError FirstName firstRequired “” = Left FirstNameRequired firstRequired s = Right (FirstName s)</p>
+<p>lastRequired :: String -&gt; Either PersonError LastName lastRequired “” = Left LastNameRequired lastRequired s = Right (LastName s)</p>
+<p>ageGTFive :: Int -&gt; Either PersonError Age ageGTFive n = case n &lt; 19 of true -&gt; Left Under18 false -&gt; Right (Age n)</p>
+<p>validatePerson :: String -&gt; String -&gt; Int -&gt; Either PersonError Person validatePerson f l a = Person &lt;$&gt; firstRequired f &lt;<em>&gt; lastRequired l &lt;</em>&gt; ageGTFive a</p>
+<p>{% endhighlight %}</p>
+<p>Like <code>Maybe</code>, <code>Either</code> implements the <code>Applicative</code> typeclass, so glueing our functions together stays the same, but now we return an <code>Either</code>. Now if we try to create a <code>Person</code> using invalid inputs:</p>
+<p>{% highlight bash %}</p>
+<blockquote>
+<p>validatePerson “John” “Jacob” 19 (Right Person John Jacob 19)</p>
+</blockquote>
+<blockquote>
+<p>validatePerson “” “Jacob” 19 (Left FirstNameRequired)</p>
+</blockquote>
+<blockquote>
+<p>validatePerson “John” “Jacob” 12 (Left Under18)</p>
+</blockquote>
+<p>{% endhighlight %}</p>
+<p>Much better! Now we know more about why our function failed. But what if we do:</p>
+<p>{% highlight bash %}</p>
+<blockquote>
+<p>validatePerson “” “” 10 (Left FirstNameRequired)</p>
+</blockquote>
+<p>{% endhighlight %}</p>
+<p>Hmmmm. Better than <code>Maybe</code>, which gives using <code>Nothing</code>, but it still doesn’t tell the whole story. Our <code>Person</code> couldn’t be constructed because all three inputs we invalid, but <code>Either</code> only shows us the first failure; it would be much nicer if we could accumulate these errors somehow.</p>
+<h2 id="purescript-validation">PureScript-Validation</h2>
+<p>The nature of the <code>Applicative</code> instance for <code>Either</code> means that we can’t accumulate errors; the first <code>Left</code> value we encounter is propagated through our function without us knowing that anything else was wrong.</p>
+<p>Enter the <a href="https://pursuit.purescript.org/packages/purescript-validation/2.0.0">purescript-validation</a> library, which provides alternative ways to perform validation.</p>
+<p>The library comes with two pieces: <code>Data.Validation.Semigroup</code> allows us to perform validation and accumulate error values by constraining error values to those which implement the <code>Semigroup</code> typeclass, and <code>Data.Validate.Semiring</code> which I’ll cover in a separate post.</p>
+<p><code>purescript-validation</code> provides the datype called <code>V</code> which is basically like <code>Either</code>:</p>
+<p>{% highlight haskell %}</p>
+<p>data V err result = Invalid err | Valid result</p>
+<p>{% endhighlight %}</p>
+<p>Here the <code>Invalid</code> data constructor is the same as <code>Left</code> and <code>Valid</code> is <code>Right</code>, the difference is in the <code>Applicative</code> instance, which says that any errors in must implement <code>Semigroup</code> so that they can be accumulated with <code>&lt;&gt;</code>. Let’s see an example:</p>
+<p>{% highlight haskell %}</p>
+<p>firstRequired :: String -&gt; V (Array PersonError) FirstName firstRequired “” = invalid [FirstNameRequired] firstRequired s = pure (FirstName s)</p>
+<p>lastRequired :: String -&gt; V (Array PersonError) LastName lastRequired “” = invalid [LastNameRequired] lastRequired s = pure (LastName s)</p>
+<p>ageGTFive :: Int -&gt; V (Array PersonError) Age ageGTFive n = case n &lt; 19 of true -&gt; invalid [Under18] false -&gt; pure (Age n)</p>
+<p>validatePerson :: String -&gt; String -&gt; Int -&gt; V (Array PersonError) Person validatePerson f l a = Person &lt;$&gt; firstRequired f &lt;<em>&gt; lastRequired l &lt;</em>&gt; ageGTFive a</p>
+<p>{% endhighlight %}</p>
+<p>A lot more had to change than when we switched from <code>Maybe</code> to <code>Either</code>, so let’s unpack it a bit.</p>
+<p>First, we have <code>V</code> which is the type <code>purescript-validation</code> exposes to us, so rather than using <code>Either</code> we use <code>V</code>. One very important thing to notice is that <code>purescript-validation</code> doesn’t expose the data constructors for <code>V</code>; instead we have <code>invalid</code> which wraps up errors, and <code>pure</code> for success. <code>pure</code> isn’t actually part of <code>purescript-validation</code>, it’s part of the <code>Applicative</code> typeclass which <code>V</code> implements. Basically, since <code>purescript-validation</code> doesn’t provide us with constructor functions, we use these alternatives, but the result is the same and we don’t really need to know the particulars of the <code>V</code> datatype. Lastly, we wrap our errors in an <code>Array</code> so we can accumulate the values. <code>Array</code> implements the <code>Semigroup</code> typeclass (simple concatination), so we should get an <code>Array</code> of all the errors at the end.</p>
+<p>Alright, so what happens when we try to use this?</p>
+<p>{% highlight bash %} &gt; validatePerson “John” “Jacob” 19 (Valid Person John Jacob 19)</p>
+<blockquote>
+<p>validatePerson “” “” 10 (Invalid [FirstNameRequired, LastNameRequired, Under18]);</p>
+</blockquote>
+<blockquote>
+<p>validatePerson “John” “” 10 (Invalid [LastNameRequired, Under18])</p>
+</blockquote>
+<p>{% endhighlight %}</p>
+<p>Nice! Now we know each input that failed.</p>
+<h2 id="working-with-validated-data">Working With Validated Data</h2>
+<p><code>purescript-validation</code> comes with some extra stuff to make working with validations a little easier.</p>
+<p>First there is <code>unV</code> which allows us to unwrap out error or success value while while applying a function to either. It has 3 arguments: a function to apply if <code>Invalid</code>, a function to apply to <code>Valid</code>, and finally the instance of <code>V</code> you want to unwrap.</p>
+<p>Next up is <code>isValid</code> which takes any <code>V</code> and returns a <code>Bool</code> to tell us if we’re dealing with an <code>Invalid</code> or a <code>Valid</code>; remember these constructors are not exposed so we need an alternative to pattern matching adn <code>isValid</code> provides that.</p>
+<p><code>V</code> also implements a few interesting typeclasses. First, it implements <code>Functor</code> giving us a way to map a function over a value inside of a <code>V</code>. Trying to map a function over <code>Invalid</code> has no effect, in the same way that trying to map over a <code>Left</code> from <code>Either</code> has no effect. Along with <code>Functor</code>, <code>V</code> also implements <code>Bifunctor</code> which provides us with a way to map functions over both <code>Invalid</code> and <code>Valid</code> values.</p>
+<h2 id="next-time">Next Time</h2>
+<p>We’ve seen how we can use <code>purescript-validation</code> and <code>Semigroup</code>s to validate data in an applicative way while accumulating any errors. Up next, we’ll take a look at the <code>Semiring</code> version that <code>purescript-validation</code> provides for validators that support errors with multiple alternatives.</p>
+</article>
+
+      </article>
+      <footer>
+        Site proudly generated by
+        <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+      </footer>
+    </div>
+  </body>
+</html>

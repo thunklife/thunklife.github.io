@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://use.fontawesome.com/445a7275ad.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>thunklife - Learn λ Calculus With Me - Booleans & Conditions</title>
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/site.css">
+    <link rel="stylesheet" href="../static/css/pygments.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <nav>
+          <div class="brand">
+            <a href="../">thunklife</a>
+          </div>
+          <div class="links">
+            <a href="../blog.html" title="Posts"><i class="fa fa-file"></i>blog</a>
+            <a href="../talks.html" title="Talks"><i class="fa fa-quote-left"></i>talks</a>
+            <a href="../cv.html" title="CV"><i class="fa fa-address-card"></i>cv</a>
+            <a href="https://twitter.com/thunk_life" title="Twitter"><i class="fa fa-twitter"></i>twitter</a>
+            <a href="https://github.com/thunklife" title="Github"><i class="fa fa-github"></i>github</a>
+            <!-- <a href="/feed.xml" title="RSS"><i class="icon-rss"></i></a> -->
+          </div>
+        </nav>
+      </header>
+      <article id="main">
+        <h1>Learn λ Calculus With Me - Booleans & Conditions</h1>
+
+<div class="info">
+    
+</div>
+
+<article class="post-content">
+  <p><em>For 2014 I decided to dedicate my free time to learning Functional Programming. One of the key things I wanted to grasp was λ Calculus, so I’m currently working through <a href="http://www.amazon.com/gp/product/0486478831">An Introduction to Functional Programming through Lambda Calculus</a>. As an exercise I’m taking concepts from each chapter and implementing them in JavaScript. You can check out the project on <a href="https://github.com/wilhelmson/lambdajs">GitHub</a>; I’ll be updating it as I complete each chapter.</em></p>
+<p><em>Caveat The First: I don’t have the best track record with series posts. I get a couple in and fizzle. That could very well happen here.</em></p>
+<p><em>Caveat The Second: I’m still learning this, and certain aspects are still a little foggy for me, especially beta, alpha and eta reductions. My goal with these posts is to share what I’ve learned, and I may have some stuff wrong. One of my hopes is to grow in my understanding by putting this out</em></p>
+<h2 id="intro">Intro</h2>
+<p>In my <a href="../blog/learn-lambda-with-me-pt1.html">last post</a> I covered the basic concepts of λ Calculus and showed some foundational functions. Now things are going to get a little more interesting as we exameine how to model Boolean values and conditional expressions. Specifically, this post is going to cover:</p>
+<ul>
+<li>True</li>
+<li>False</li>
+<li>Conditional expression (if/else)</li>
+<li>Not</li>
+<li>And</li>
+<li>Or</li>
+</ul>
+<p>These items are covered in chapter 3 of <a href="http://www.amazon.com/gp/product/0486478831">the book</a>.</p>
+<h2 id="conditional-expression-true-false">Conditional Expression, True &amp; False</h2>
+<p>Let’s consider a simple conditional expression in JavaScript:</p>
+<p>{% highlight javascript linenos %} if (someCondition) { return doTrueAction(); } else { return doFalseAction(); } {% endhighlight %}</p>
+<p>In JavaScript, the <code>else</code> block isn’t required, but in other languages, such as Haskell, the <code>else</code> block must be explicit; the same is true in λ Calculus.</p>
+<p>Of course, JavaScript offers an alternative syntax for if/else conditions:</p>
+<p>{% highlight javascript linenos %} return someCondition ? doTrueAction() : doFalseAction(); {% endhighlight %}</p>
+<p>With a conditional expression expressed in this fashion, the translation to λ Calculus becomes simpler. If you think about it abstractly, what we have here is a pair of functions; one that applies if a condition is true and the other if the condition is false. So then, a conditional expression can be modeled using the <strong>pair</strong> function.</p>
+<p>If you recall, the <strong>pair</strong> function looks like this: <code>λx.λy.λf((f x) y)</code>. In JavaScript it is written like so: {% highlight javascript linenos %} var pair = function (x){ return function (y){ return function (f){ return f(x)(y); }; }; }; {% endhighlight %}</p>
+<p>Of course, we’re good developers and we wouldn’t duplicate that code, but we would want to name it such that we know we’re talking about, so we’ll just give it an alias.</p>
+<p>{% highlight javascript linenos %} var cond = pair; {% endhighlight%}</p>
+<p>If a conditional expression is a pair, then we should be able to use <strong>first</strong> and <strong>second</strong> to represent true and false, respectively, since they are used to pick an item from a pair. Here’s a quick refresher on those two:</p>
+<p><strong>first</strong> looks like this: <code>λx.λy.x</code>, and <strong>second</strong> looks like this: <code>λx.λy.y</code>. In JavaScript we wrote those functions like this:</p>
+<p>{% highlight javascript linenos %} var first = function (x){ return function (y){ return x; }; };</p>
+<p>var second = function (x){ return function (y){ return y; }; }; {% endhighlight %}</p>
+<p>Again, we can repurpose these functions:</p>
+<p>{% highlight javascript linenos %} var truth = first; var untruth = second; {% endhighlight %}</p>
+<p>Since we can’t use <code>true</code> and <code>false</code> as names, I’ve gone with <code>truth</code> and <code>untruth</code> instead.</p>
+<p>I’m not going to go into the reduction of these functions since we’ve already covered it. If you’d like a refresher on how these reduce,check out the previous post.</p>
+<h2 id="not">Not</h2>
+<p>The <strong>not</strong> operator, or <code>!</code> in JavaScript, takes a Boolean and returns its opposite. This can be easily represented in a truth table:</p>
+<table>
+<thead>
+<pre><code>&lt;tr&gt;
+  &lt;th&gt;x&lt;/th&gt;
+  &lt;th&gt;Not x&lt;/th&gt;
+&lt;/tr&gt;</code></pre>
+</thead>
+<tbody>
+<pre><code>&lt;tr&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+&lt;/tr&gt;</code></pre>
+</tbody>
+</table>
+<p>Simple, no?</p>
+<p>The <strong>not</strong> function looks like this: <code>λx.(((cond untruth) truth) x)</code>.</p>
+<p>If we expand that a we get: <code>λx.(((λy.λz.λf((f y) z) untruth) truth) x)</code></p>
+<p>If we start reducing, we replace <code>y</code> with <code>untruth</code>, <code>z</code> with <code>truth</code> and <code>f</code> with <code>x</code>. The result is: <code>λx.((x untruth) truth)</code>.</p>
+<p>This reduced version of <strong>not</strong> is the same as the previous one, so we can use it instead.</p>
+<p>Now we can apply <strong>not</strong> to <strong>truth</strong>: <code>(λx((x untruth) truth) truth)</code>.</p>
+<p>This reduces to <code>((truth untruth) truth)</code>. We know that <code>truth</code> is the same as <code>first</code> so it will take two arguments are return the first, but for fun let’s complete the reduction.</p>
+<p><code>((λx.λy.x untruth) truth)</code> is the expansion of the previous expression. Which in turn reduces to <code>(λy.untruth truth)</code>. At this point, there is no need to reduce any further. The body, or return value, has already been substituted, we know <code>untruth</code> is the returned value.</p>
+<p>So how is this expressed in JavaScript?</p>
+<p>{% highlight javascript linenos %} var not = function (x){ return x(untruth)(truth); }; {% endhighlight %}</p>
+<p>Keep in mind that <code>x</code> is a function that represents either true or false, aka <strong>truth</strong> or <strong>false</strong>, aka <strong>first</strong> or <strong>second</strong>.</p>
+<h2 id="and">And</h2>
+<p>The <strong>and</strong> operator, or <code>&amp;&amp;</code> in JavaScript, takes to operands and returns true if both values are true. We can represent this using the following truth table:</p>
+<table>
+<thead>
+<pre><code>&lt;tr&gt;
+  &lt;th&gt;x&lt;/th&gt;
+  &lt;th&gt;y&lt;/th&gt;
+  &lt;th&gt;x and y&lt;/th&gt;
+&lt;/tr&gt;</code></pre>
+</thead>
+<tbody>
+<pre><code>&lt;tr&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+&lt;/tr&gt;</code></pre>
+</tbody>
+</table>
+<p>Using this table, we see that we only need to evaluate the right operand if the left is true; if the left is false, the expression evaluates to false. Using the ternary operator we could describe <strong>and</strong> like this: <code>x ? y : false</code>.</p>
+<p>As a λ function, it looks like this: <code>λx.λy(((cond y) untruth) x)</code>. Just like with <strong>not</strong> we can substitute <code>cond</code> with <code>x</code> giving us:</p>
+<p><code>λx.λy((x y) untruth)</code></p>
+<p>Let’s apply this function to our representations of true and false.</p>
+<p><code>((λx.λy((x y) untruth) truth) untruth)</code></p>
+<p>Now to reduce things. We can substitute <code>x</code> for <code>truth</code>, and <code>y</code> for <code>untruth</code>.</p>
+<p><code>((truth untruth) untruth)</code> then exands to <code>((λx.λy.x untruth) untruth)</code>. Reducing further gives us <code>(λy.false false)</code></p>
+<h2 id="or">Or</h2>
+<p>The <strong>or</strong> operator, or <code>||</code> in JavaScript, takes to operands and returns true if either value is true, otherwise it returns false. A truth table for not looks like this:</p>
+<table>
+<thead>
+<pre><code>&lt;tr&gt;
+  &lt;th&gt;x&lt;/th&gt;
+  &lt;th&gt;y&lt;/th&gt;
+  &lt;th&gt;x or y&lt;/th&gt;
+&lt;/tr&gt;</code></pre>
+</thead>
+<tbody>
+<pre><code>&lt;tr&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;False&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+  &lt;td&gt;True&lt;/td&gt;
+&lt;/tr&gt;</code></pre>
+</tbody>
+</table>
+<p>With <strong>and</strong> we only needed to evaluate the right operand if the left was true, <strong>or</strong> is similar in that we only evaluate the right operand if the left if false. Using the ternary operator we can express or in this way: <code>x ? true : y</code></p>
+<p>In λ Calculus it is represented like this <code>λx.λy(((cond truth) x) y)</code>. Again, as with <strong>not</strong> and <strong>or</strong>, we can simplify this notation by substituting <code>cond</code> for <code>x</code> giving us:</p>
+<p><code>λx.λy((x truth) y)</code></p>
+<p>Now to apply this function using <code>truth</code> and <code>untruth</code>.</p>
+<p><code>((λx.λy((x truth) y) untruth) truth)</code></p>
+<p>To reduce this we substitute <code>x</code> for <code>untruth</code> and <code>y</code> for <code>truth</code> and we get:<code>((untruth truth) truth)</code>.</p>
+<p>Of course <code>untruth</code> is just a synonym for <code>second</code> which takes two arguments and returns the second one, so it should be clear what the result of this expression will be. I leave it to the reader complete the reduction.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>By considering a conditional expression to be a pair of possible outcomes, one for truth and one for untruth, we can model boolean operators as pairs, and true/false values as a “selector” function for choosing one of the two outcomes.</p>
+<p>Next up we’ll look at how pairs can be used to model natural numbers.</p>
+</article>
+
+      </article>
+      <footer>
+        Site proudly generated by
+        <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+      </footer>
+    </div>
+  </body>
+</html>

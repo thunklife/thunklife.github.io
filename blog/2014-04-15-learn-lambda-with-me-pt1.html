@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://use.fontawesome.com/445a7275ad.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>thunklife - Learn λ Calculus With Me - Foundations</title>
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/site.css">
+    <link rel="stylesheet" href="../static/css/pygments.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <nav>
+          <div class="brand">
+            <a href="../">thunklife</a>
+          </div>
+          <div class="links">
+            <a href="../blog.html" title="Posts"><i class="fa fa-file"></i>blog</a>
+            <a href="../talks.html" title="Talks"><i class="fa fa-quote-left"></i>talks</a>
+            <a href="../cv.html" title="CV"><i class="fa fa-address-card"></i>cv</a>
+            <a href="https://twitter.com/thunk_life" title="Twitter"><i class="fa fa-twitter"></i>twitter</a>
+            <a href="https://github.com/thunklife" title="Github"><i class="fa fa-github"></i>github</a>
+            <!-- <a href="/feed.xml" title="RSS"><i class="icon-rss"></i></a> -->
+          </div>
+        </nav>
+      </header>
+      <article id="main">
+        <h1>Learn λ Calculus With Me - Foundations</h1>
+
+<div class="info">
+    
+</div>
+
+<article class="post-content">
+  <p><em>For 2014 I decided to dedicate my free time to learning Functional Programming. One of the key things I wanted to grasp was λ Calculus, so I’m currently working through <a href="http://www.amazon.com/gp/product/0486478831">An Introduction to Functional Programming through Lambda Calculus</a>. As an exercise I’m taking concepts from each chapter and implementing them in JavaScript. You can check out the project on <a href="https://github.com/wilhelmson/lambdajs">GitHub</a>; I’ll be updating it as I complete each chapter.</em></p>
+<p><em>Caveat The First: I don’t have the best track record with series posts. I get a couple in and fizzle. That could very well happen here.</em></p>
+<p><em>Caveat The Second: I’m still learning this, and certain aspects are still a little foggy for me, especially beta, alpha and eta reductions. My goal with these posts is to share what I’ve learned, and I may have some stuff wrong. One of my hopes is to grow in my understanding by putting this out</em></p>
+<h2 id="λ-what">λ What?</h2>
+<p>λ calculus was developed in the 1930s by Alonzo Church as a model for computability, and is a central concept in computer sciene. It was developed during the same time that Turing was developing his Turing machines, and was actually proven, by Turing, to be equivalant to a Turing machine in terms of modeling computability. That is to say, it can be used to describe all aspects of programming.</p>
+<p>λ calculus is an extremely simple system based on pure abstraction. Since it can be used to describe all aspects of a programming language, it can be used as a ‘machine code’, of sorts, for functional programs; which I’ll get into in later posts.</p>
+<p>One last thing to note, before continuing. λ calculus is only functions. You will see, later, how it can be used to express numbers, collections, boolean logic and much, much more, but it is important to remember that we’re talking in the abstract. It’s just functions all the way down.</p>
+<h2 id="the-anatomy-of-a-λ-expression">The Anatomy of a λ Expression</h2>
+<p>λ expressions can be one of three things: - A name - A function - A function application</p>
+<p>A name is any number of non-blank characters, though you’ll usually see them in single character form.</p>
+<p>Functions have the form: <code>λ&lt;name&gt;.&lt;body&gt;</code></p>
+<p>Function application takes the following form: <code>(&lt;function expression&gt; &lt;argument&gt;)</code></p>
+<p>A function expression provides an abstraction, and the application specializes that abstraction by providing a value to the name defined by the function expression. For example: <code>(λx.x λs.(s s))</code></p>
+<p>That’s it, that’s all there is to know. Now go forth and do good maths.</p>
+<p>Notice the lack of numbers, strings, assignment and virtually everything else that you think of when you think of programming. With λ calculus you have to think more abstractly, what exactly is a number anyway? Now, the lack of assignment becomes a problem; expressions get really, really long and hard to follow. For this exercise I’m going to allow assignment of expressions to variables.</p>
+<h2 id="javascript">JavaScript?</h2>
+<p>Sure why not? It’s the language I use the most, but more importantly it has first-class functions. Which means we can create arbitrary functions, pass them as arguments and return them from functions; perfect to study λ calculus. Here is what a λ function looks like in JavaScript: {% highlight javascript linenos %} var id = function(x){ return x; } {% endhighlight %}</p>
+<h2 id="a-fistful-of-functions">A Fistful of Functions</h2>
+<p>There is much more to discuss about λ functions, but without some context, it won’t do much good. So let’s look at some simple functions to get our feet wet.</p>
+<h3 id="identity">Identity</h3>
+<p>If you’ve done any functional programming, the concept of the <strong>identity</strong> function won’t be new to you, if not, it’ll look pretty pointless…at first. The <strong>identity</strong> function has this form: <code>λx.x</code></p>
+<p>Based on what we know, about the anatomy of a λ function, we can say that this function has a single variable with the name <code>x</code>. We then have a <code>.</code>, which separates the name from the body, and then <code>x</code> again.</p>
+<p>So this does what exactly? Oh, well, it takes a value and then returns it.</p>
+<p>Lame, right? Don’t worry, it’ll make sense later.</p>
+<p>In JavaScript, <strong>idenitity</strong> looks like this: {%highlight javascript linenos %} var identity = function (x){ return x; }; {% endhighlight %}</p>
+<p>Lame again, I know.</p>
+<h3 id="self-application">Self Application</h3>
+<p>The <strong>self-application</strong> (<strong>selfApply</strong>) function is another one that seems to be of little value, but when you get into recursion, it really shows its power. The <strong>self-application</strong> function has this form: <code>λs.(s s)</code></p>
+<p>This function takes a single argument <code>s</code>. The body of the function is a function application: <code>(s s)</code>. Remembering that everything is a function, this application takes <code>s</code> and applies it to itself.</p>
+<p>Consider the following: <code>(λs.(s s) λx.x)</code></p>
+<p>The function application above applies the <strong>self-application</strong> function to <strong>identity</strong>. The result is that <code>s</code> is replaced by the argument <code>λx.x</code> in the function body. So <strong>identity</strong> is applied to <strong>identity</strong>, the result of which is <strong>identity</strong>.</p>
+<p>And now you’re thinking, “What a waste of freaking time.”</p>
+<p>Stick with me though, it gets really cool.</p>
+<p>For fun, consider what this does: <code>(λs.(s s) λs.(s s))</code></p>
+<p>Now for the JavaScript. {% highlight javascript linenos%} var selfApply = function(s){ return s(s); }; {% endhighlight %}</p>
+<h3 id="function-application">Function Application</h3>
+<p>The <strong>function-application</strong> or just <strong>apply</strong> function will probably be more familiar to most JavaScript developers because we’re so used to passing around functions for callbacks..</p>
+<p>The <strong>function-application</strong> function has this form: <code>λf.λa.(f a)</code></p>
+<p>The <strong>function-application</strong> function does exactly what its name implies, it takes a function and an argument, and applies the function to that argument.</p>
+<p>In JavaScript, we write: {% highlight javascript linenos %} var apply = function(f){ return function (a){ return f(a); }; }; {% endhighlight %}</p>
+<h2 id="all-about-variables">All About Variables</h2>
+<p>With a couple of basic functions under our belts, we can look at variables a bit more in depth.</p>
+<p>Variable scope in λ calculus will be familiar to JavaScript developers because they are function scoped. In this function <code>λf.λs.(f (s s))</code> the variable <code>f</code> is in the scope of <code>(f (s s))</code> while the variable <code>s</code> is in the scope of <code>(s s)</code>.</p>
+<h3 id="bound-variables">Bound Variables</h3>
+<p>There are two rules that you can use to determine if a variable is considered <em>bound</em>.</p>
+<p>If the expression is a function <code>λ&lt;name&gt;.&lt;body&gt;</code>, then the variable is bound if <code>&lt;name&gt;</code> appears in <code>&lt;body&gt;</code> or if it is bound in <code>body</code>. For example, in <code>λx.(x λy.y)</code> both <code>x</code> and <code>y</code> are bound. However, in <code>λx.(x y)</code> only <code>x</code> is bound.</p>
+<p>If the expression is an application <code>(&lt;function&gt; &lt;argument&gt;)</code>, the variable is bound if it is bound in either <code>&lt;function&gt;</code> or <code>&lt;argument&gt;</code>. For example in the application <code>(λx.x y)</code> only <code>x</code> is bound. However, in <code>(λx.x λy.y)</code> both <code>x</code> and <code>y</code> are bound.</p>
+<h3 id="free-variables">Free Variables</h3>
+<p>There are three rules you can use to determine if a variable is <em>free</em>. As you may have guessed, they are the opposite of the rules for bound variables.</p>
+<p>If the expression is a function <code>λ&lt;name&gt;.&lt;body&gt;</code>, and the variable name is not <code>&lt;name&gt;</code> and the variable is not bound in <code>&lt;body&gt;</code> then it is free. In the example above <code>λx.(x y)</code> the variable <code>y</code> is free.</p>
+<p>If the expression is an application <code>(&lt;function&gt; &lt;argument&gt;)</code> and the variable is bound in neither <code>&lt;function&gt;</code> nor <code>&lt;argument&gt;</code>, then it is considered free. For example, in the application <code>(λx.x y)</code> the variable <code>y</code> is free.</p>
+<p>Lastly, if the expresion is only a name <code>&lt;name&gt;</code> then the variable is free.</p>
+<h3 id="variables-in-javascript">Variables in JavaScript</h3>
+<p>As it turns out, scoping, free and bound variables work in the same way in JavaScript; take this code for example:</p>
+<p>{% highlight javascript linenos %} var weirdAdd = function operandA(a){ return function operandB(b){ return a + b; }; };</p>
+<p>weirdAdd(2)(3); //=&gt; 5; {% endhighlight %}</p>
+<p>In the example above <code>a</code> is scoped to the function <code>operandA</code> and can be accessed by any nested functions, like <code>operandB</code>. Additionally, the variable <code>b</code> is scoped to <code>operandB</code>.</p>
+<p>What about free and bound variables? Well, we can follow the same rules. If we look at the entire expression above, both <code>a</code> and <code>b</code> are bound. However what if we do this:</p>
+<p>{% highlight javascript linenos %} var add5 = weirdAdd(5); //=&gt; [Function operandB] {% endhighlight%}</p>
+<p>The function returned by calling <code>weirdAdd</code> with a single argument would look like this:</p>
+<p>{%highlight javascript linenos%} function operandB(b){ return a + b; } {% endhighlight %}</p>
+<p>Here we can see that <code>operandB</code> has access <code>a</code> because of the scope of original function <code>operandA</code>, however, <code>a</code> is free in this situation.</p>
+<h2 id="reduction">Reduction</h2>
+<p>Now that we know the difference between a free and bound variables, we can look at the process of substituting names for their arguments.</p>
+<p>If an application <code>(λ&lt;name&gt;.&lt;body&gt; &lt;arguments&gt;)</code> we reduce the expression by replacing all free instances of <code>&lt;name&gt;</code> in <code>&lt;body&gt;</code> with <code>&lt;argument&gt;</code>.</p>
+<h3 id="reduction-with-unique-names">Reduction With Unique Names</h3>
+<p>Let’s look at an example of the function application function from before:</p>
+<p><code>((λf.λa(f a) λs.(s s)) λx.x)</code></p>
+<p>To reduce this function we start with the variable <code>f</code> and we replace it with the argument <code>λs.(s s)</code>, resulting in <code>(λa.(λs.(s s) a) λx.x)</code>.</p>
+<p>We continue this process with the variable <code>a</code> and replace it with <code>λx.x</code> giving <code>(λs.(s s) λ.x.x)</code> which is the same as the example of the <strong>self-applicationi</strong> function. Just for fun, let’s finish the reduction.</p>
+<p><code>(λs.(s s) λx.x)</code> becomes <code>(λx.x λx.x)</code> which ends at <code>λx.x</code></p>
+<h3 id="reduction-with-non-unique-names">Reduction With Non-Unique Names</h3>
+<p>Let’s look at one more example, where a variable name is reused.</p>
+<p><code>(λf(f λf.f) λs.(s s))</code></p>
+<p>The first <code>f</code> is free in <code>(f λf.f)</code> so it is replaced with <code>λs.(s s)</code> giving us:</p>
+<p><code>(λs. (s s) λf.f)</code></p>
+<p>Both instances of <code>s</code> are free, so we can replace them with <code>λf.f</code> and we end up with <code>(λf.f λf.f)</code>, which is <code>λf.f</code>.</p>
+<p>And that’s reduction in a nutshell. Of course, we could have used names in the place of the identity or selfApply functions, in which case we would have expanded them to their λ representations and continued on with the reduction.</p>
+<h2 id="for-a-few-functions-more">For a Few Functions More</h2>
+<p>Things are about to get a little more abstract, a little more mind expanding, and a lot more fun as we consider how to select arguments in nested functions and how to use functions to model a pair. These functions are the foundation for modelling boolean logic, and integer arithmetic.</p>
+<h3 id="first">First</h3>
+<p>Let’s say we have a pair of things, and we want to get the first one, how would you got about that using only functions? Well it would look something like this: <code>λx.λy.x</code>.</p>
+<p>The <strong>first</strong> function, takes two arguments and returns the first. I’m not going to bother with an example reduction because it’s pretty self-explanatory.</p>
+<p>In JavaScript it looks like this {% highlight javascript linenos %} var first = function(x){ return function(y){ return x; }; }; {% endhighlight %}</p>
+<h3 id="second">Second</h3>
+<p>I’m going to move on to the next function quickly because they make more sense once you see how to create pairs. The <strong>second</strong> function is almost identical to <strong>first</strong>, except it returns the second argument.</p>
+<p>The <strong>second</strong> function has this form: <code>λx.λy.y</code></p>
+<p>I’m sure you’ve already figured out what it looks like in JavaScript, but just for fun: {% highlight javascript linenos %} var second = function(x){ return function(y){ return y; }; }; {% endhighlight %}</p>
+<h3 id="pair">Pair</h3>
+<p>Now for the good stuff. So how would you create a pair of things using only functions? Well, you could do this: <code>λx.λy.λf((f x) y)</code></p>
+<p>WAT?</p>
+<p>The <strong>pair</strong> function takes two things, <code>x</code> and <code>y</code>, and a function <code>f</code>. It then applies that function to those two arguments. And you’re saying, “How is that a pair?”. Well, it’s not, but what if you didn’t supply that third argument, what would you have?</p>
+<p>You’d have a function that has access two the free variables <code>x</code> and <code>y</code>; and there’s your pair. Sure you can’t print it out and see the values, but it’s no less a pair.</p>
+<p>So now you’ve got this function, waiting for its third argument. What if you passed it the <strong>first</strong> or <strong>second</strong> function from earlier? Well you’d get an item out of the pair.</p>
+<p>Here’s how it works. We’re going to supply two arbitrary functions as the first and second arguments, then apply the <strong>first</strong> function.</p>
+<p><code>(((λx.λy.λf.((f x) y) identity) selfApply) first)</code></p>
+<p>If we substitute the variables for their arguments we get</p>
+<p><code>((first identity) selfApply)</code></p>
+<p>If we expand <code>first</code> we get:</p>
+<p><code>((λx.λy.x identity) selfApply)</code></p>
+<p>Now we replace <code>x</code> with <code>identity</code> and <code>y</code> with <code>selfApply</code> and we get our <strong>identity</strong> function as the result.</p>
+<p>In JavaScript, this looks like:</p>
+<p>{% highlight javascript linenos %} var pair = function(x){ return function(y){ return function(f){ return f(x)(y); }; }; }; {% endhighlight %}</p>
+<h2 id="summary">Summary</h2>
+<p>So there you have it, a high-level overview of the λ calculus. I’ve hand-waived a couple of things here and there but what is presented above is the core of λ calculus as I currently understand it.</p>
+<p>I would like to say something about name clashes, which I didn’t cover at all. Because of how variables are scoped, it is entirely legal to reuse variable names; this is true of JavaScript as well. I didn’t touch on the implications because you just plain shouldn’t do it. Things are simpler when you don’t have to consider which version of variable <code>h</code> is in scope at what point during a reduction.</p>
+<p>The next post in this series will cover conditions and Booleans (roughly half of chapter 3 in <a href="http://www.amazon.com/gp/product/0486478831">An Introduction to Functional Programming through Lambda Calculus</a>).</p>
+</article>
+
+      </article>
+      <footer>
+        Site proudly generated by
+        <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+      </footer>
+    </div>
+  </body>
+</html>
