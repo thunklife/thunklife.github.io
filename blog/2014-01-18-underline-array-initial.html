@@ -6,7 +6,7 @@
     <title>thunklife - Underline - Array Initial</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -38,36 +38,59 @@
 <h2 id="initial">Initial</h2>
 <p>From the Underscore docs:</p>
 <blockquote>
-<pre><code>&lt;p&gt;&lt;b&gt;_.initial(array, [n])&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Returns the first element of an array. Passing n will return the first n elements of the array.&lt;/p&gt;</code></pre>
+<p>_.initial(array, [n])</p>
+<p>Returns the first element of an array. Passing n will return the first n elements of the array.</p>
 </blockquote>
 <p>So <code>initial</code> takes an array and, optionally, a number of items to exclude, and returns a copy of the original with n items removed from the end.</p>
 <p>Now for some level-setting</p>
-<p>{% highlight javascript %} var arr = [1,2,3,4,5]; <em>.initial(); //=&gt; exception </em>.initial([]); //=&gt; [] <em>.initial(arr); //=&gt; [1,2,3,4] </em>.initial(arr, 3); //=&gt; [1,2] _.initial(arr, 10); //=&gt; [] {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> arr <span class="op">=</span> [<span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span>]<span class="op">;</span>
+<span class="va">_</span>.<span class="at">initial</span>()<span class="op">;</span> <span class="co">//=&gt; exception</span>
+<span class="va">_</span>.<span class="at">initial</span>([])<span class="op">;</span> <span class="co">//=&gt; []</span>
+<span class="va">_</span>.<span class="at">initial</span>(arr)<span class="op">;</span> <span class="co">//=&gt; [1,2,3,4]</span>
+<span class="va">_</span>.<span class="at">initial</span>(arr<span class="op">,</span> <span class="dv">3</span>)<span class="op">;</span> <span class="co">//=&gt; [1,2]</span>
+<span class="va">_</span>.<span class="at">initial</span>(arr<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span> <span class="co">//=&gt; []</span></code></pre></div>
 <p>Simple enough. It’s essentially the same base cases as <code>first</code> but reversed. As with <code>first</code> I’m not going to support the optional last argument, and I also want to avoid that exception and just return undefined.</p>
 <h2 id="the-solutions">The Solutions</h2>
 <p>Now to the good stuff.</p>
 <h3 id="the-recursive-way">The Recursive Way</h3>
-<p>{% highlight javascript linenos %} //fn-curry is the curry module from my intro post. //I’ve since published it on npm under the name fn-curry var curry = require(‘fn-curry’), concat = Array.prototype.concat;</p>
-<p>module.exports = curry(function initial(n,arr){ return _initial(n, arr.slice());</p>
-<pre><code>function _initial(n, arr){
-	if(arr.length &lt;= n) return [];
-	var head = arr.shift();
-	return concat.call([], head, _initial(n,arr));
-}</code></pre>
-<p>}); {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">//fn-curry is the curry module from my intro post. </span>
+<span class="co">//I've since published it on npm under the name fn-curry</span>
+<span class="kw">var</span> curry <span class="op">=</span> <span class="at">require</span>(<span class="st">'fn-curry'</span>)<span class="op">,</span>
+  concat <span class="op">=</span> <span class="va">Array</span>.<span class="va">prototype</span>.<span class="at">concat</span><span class="op">;</span>
+
+<span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> <span class="at">curry</span>(<span class="kw">function</span> <span class="at">initial</span>(n<span class="op">,</span>arr)<span class="op">{</span>
+  <span class="cf">return</span> <span class="at">_initial</span>(n<span class="op">,</span> <span class="va">arr</span>.<span class="at">slice</span>())<span class="op">;</span>
+
+  <span class="kw">function</span> <span class="at">_initial</span>(n<span class="op">,</span> arr)<span class="op">{</span>
+    <span class="cf">if</span>(<span class="va">arr</span>.<span class="at">length</span> <span class="op">&lt;=</span> n) <span class="cf">return</span> []<span class="op">;</span>
+    <span class="kw">var</span> head <span class="op">=</span> <span class="va">arr</span>.<span class="at">shift</span>()<span class="op">;</span>
+    <span class="cf">return</span> <span class="va">concat</span>.<span class="at">call</span>([]<span class="op">,</span> head<span class="op">,</span> <span class="at">_initial</span>(n<span class="op">,</span>arr))<span class="op">;</span>
+  <span class="op">}</span>
+<span class="op">}</span>)<span class="op">;</span></code></pre></div>
 <p>This works in much the same way that the recursive solution for <code>first</code>. The difference is instead of decrementing <code>n</code> I’m comparing it to the length of the remaining array.</p>
 <p>Again, all of the work is delegated to another function and a copy of the original array is passed in to avoid destroying it. After it is determined that the array exists, its length is compared to the exclusion length; this is the base case for the recursion. If the length is <code>n</code> is greather than or equal to the length, exclude everything, an empty array is returned. Otherwise, the head is taken off of the array and concatenated with the result of calling the function again.</p>
 <p>Eventually, the length of the remaining array and <code>n</code> will be equal, returning an empty array. Then the calls will begin bubbling up, adding each element to the new array.</p>
 <p>Using the level-setting test from before, you can see the results are the same.</p>
-<p>{% highlight javascript %} var initial var arr = [1,2,3,4,5]; initial(); //=&gt; exception initial(1,[]); //=&gt; [] initial(1, arr); //=&gt; [1,2,3,4] initial(3, arr); //=&gt; [1,2] initial(10, arr); //=&gt; [] {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> initial
+<span class="kw">var</span> arr <span class="op">=</span> [<span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span>]<span class="op">;</span>
+<span class="at">initial</span>()<span class="op">;</span> <span class="co">//=&gt; exception</span>
+<span class="at">initial</span>(<span class="dv">1</span><span class="op">,</span>[])<span class="op">;</span> <span class="co">//=&gt; []</span>
+<span class="at">initial</span>(<span class="dv">1</span><span class="op">,</span> arr)<span class="op">;</span> <span class="co">//=&gt; [1,2,3,4]</span>
+<span class="at">initial</span>(<span class="dv">3</span><span class="op">,</span> arr)<span class="op">;</span> <span class="co">//=&gt; [1,2]</span>
+<span class="at">initial</span>(<span class="dv">10</span><span class="op">,</span> arr)<span class="op">;</span> <span class="co">//=&gt; []</span></code></pre></div>
 <h3 id="the-sane-way">The Sane Way</h3>
-<p>The recursive version works, but it’s really only valuable as a learning device. A more sane way to get the same result would be: {% highlight javascript linenos %} var curry = require(‘fn-curry’),</p>
-<p>module.exports = curry(function initial(n,arr){ return arr.slice(0, arr.length-n) }); {% endhighlight %}</p>
+<p>The recursive version works, but it’s really only valuable as a learning device. A more sane way to get the same result would be:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> curry <span class="op">=</span> <span class="at">require</span>(<span class="st">'fn-curry'</span>)<span class="op">,</span>
+
+<span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> <span class="at">curry</span>(<span class="kw">function</span> <span class="at">initial</span>(n<span class="op">,</span>arr)<span class="op">{</span>
+  <span class="cf">return</span> <span class="va">arr</span>.<span class="at">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="va">arr</span>.<span class="at">length</span><span class="op">-</span>n)
+<span class="op">}</span>)<span class="op">;</span></code></pre></div>
 <p>Makes the recursive example look silly, right? Especially when your consider that the recursive version already used <code>slice</code> to copy the array; all I really needed to do was pass a second argument.</p>
 <h2 id="the-underscore-way">The Underscore Way</h2>
 <p>Now to look at how it’s actually written in Underscore:</p>
-<p>{% highlight javascript linenos %} _.initial = function(array, n, guard) { return slice.call(array, 0, array.length - ((n == null) || guard ? 1 : n)); }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">_</span>.<span class="at">initial</span> <span class="op">=</span> <span class="kw">function</span>(array<span class="op">,</span> n<span class="op">,</span> guard) <span class="op">{</span>
+    <span class="cf">return</span> <span class="va">slice</span>.<span class="at">call</span>(array<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="va">array</span>.<span class="at">length</span> <span class="op">-</span> ((n <span class="op">==</span> <span class="kw">null</span>) <span class="op">||</span> guard <span class="op">?</span> <span class="dv">1</span> : n))<span class="op">;</span>
+  <span class="op">};</span></code></pre></div>
 <p>OK, so not too different. Again there is that extra <code>guard</code> argument, which is used with <code>map</code>. The main difference is the extra work being done to set the last argument being passed to <code>slice</code>. My choice to make <code>n</code> required means I avoid that check.</p>
 <h2 id="a-detour">A Detour</h2>
 <p>You might have noticed that <code>initial</code> and <code>first</code> do pretty similar things. Sure, <code>first</code> has some extra stuff it has to do because it can return a single value or an array of values, but at the bottom they both slice the source array into a new array of a given length.</p>

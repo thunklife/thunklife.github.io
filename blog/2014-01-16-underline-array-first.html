@@ -6,7 +6,7 @@
     <title>thunklife - Underline - Array First</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -38,43 +38,66 @@
 <h2 id="first">First</h2>
 <p>From the Underscore docs:</p>
 <blockquote>
-<pre><code>&lt;p&gt;&lt;b&gt;_.first(array, [n])&lt;/b&gt; Alias: &lt;b&gt;head&lt;/b&gt;, &lt;b&gt;take&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Returns the first element of an array. Passing n will return the first n elements of the array.&lt;/p&gt;</code></pre>
+<p>_.first(array, [n]) Alias: head, take</p>
+<p>Returns the first element of an array. Passing n will return the first n elements of the array.</p>
 </blockquote>
 <p>So <code>first</code> takes an array, and optionally a number of elements to take from the front. If no number is provided, it takes a single element.</p>
 <p>For good measure, here are a few examples:</p>
-<p>{% highlight javascript %} var arr = [1,2,3,4,5]; <em>.first([]); //=&gt; undefined </em>.first(arr); //=&gt; 1 <em>.first(arr, 3); //=&gt; [1,2,3] </em>.first(arr, 10); //=&gt; [1,2,3,4,5] {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> arr <span class="op">=</span> [<span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span>]<span class="op">;</span>
+<span class="va">_</span>.<span class="at">first</span>([])<span class="op">;</span> <span class="co">//=&gt; undefined</span>
+<span class="va">_</span>.<span class="at">first</span>(arr)<span class="op">;</span> <span class="co">//=&gt; 1</span>
+<span class="va">_</span>.<span class="at">first</span>(arr<span class="op">,</span> <span class="dv">3</span>)<span class="op">;</span> <span class="co">//=&gt; [1,2,3]</span>
+<span class="va">_</span>.<span class="at">first</span>(arr<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span> <span class="co">//=&gt; [1,2,3,4,5]</span></code></pre></div>
 <p>That should be enough to figure out the base cases.</p>
 <p>If you call <code>first</code> with an empty array, you get <code>undefined</code> back. The next case is one I’m not going to support because flipping the arguments means you have to supply the number of elements to take. The last base case is an array with a single item. In that case, you get that item.</p>
 <h2 id="the-solutions">The Solution(s)</h2>
 <p>So here is what I came up with:</p>
-<p>{% highlight javascript linenos %} var curry = require(‘curry’), concat = Array.prototype.concat;</p>
-<p>module.exports = curry(function first(n,arr){ if(!arr.length) return void 0; if(arr.length === 1) return arr[0];</p>
-<pre><code>return take(n, arr.slice(0));</code></pre>
-<p>});</p>
-<p>function take(n,arr){ var head; if(n &lt;= 0 || !arr.length) return []; head = arr.shift();</p>
-<pre><code>return concat.call([],head, take(--n, arr));</code></pre>
-<p>} {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> curry <span class="op">=</span> <span class="at">require</span>(<span class="st">'curry'</span>)<span class="op">,</span>
+	concat <span class="op">=</span> <span class="va">Array</span>.<span class="va">prototype</span>.<span class="at">concat</span><span class="op">;</span>
+
+<span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> <span class="at">curry</span>(<span class="kw">function</span> <span class="at">first</span>(n<span class="op">,</span>arr)<span class="op">{</span>
+	<span class="cf">if</span>(<span class="op">!</span><span class="va">arr</span>.<span class="at">length</span>) <span class="cf">return</span> <span class="kw">void</span> <span class="dv">0</span><span class="op">;</span>
+	<span class="cf">if</span>(<span class="va">arr</span>.<span class="at">length</span> <span class="op">===</span> <span class="dv">1</span>) <span class="cf">return</span> arr[<span class="dv">0</span>]<span class="op">;</span>
+
+	<span class="cf">return</span> <span class="at">take</span>(n<span class="op">,</span> <span class="va">arr</span>.<span class="at">slice</span>(<span class="dv">0</span>))<span class="op">;</span>
+<span class="op">}</span>)<span class="op">;</span>
+
+<span class="kw">function</span> <span class="at">take</span>(n<span class="op">,</span>arr)<span class="op">{</span>
+	<span class="kw">var</span> head<span class="op">;</span>
+	<span class="cf">if</span>(n <span class="op">&lt;=</span> <span class="dv">0</span> <span class="op">||</span> <span class="op">!</span><span class="va">arr</span>.<span class="at">length</span>) <span class="cf">return</span> []<span class="op">;</span>
+	head <span class="op">=</span> <span class="va">arr</span>.<span class="at">shift</span>()<span class="op">;</span>
+
+	<span class="cf">return</span> <span class="va">concat</span>.<span class="at">call</span>([]<span class="op">,</span>head<span class="op">,</span> <span class="at">take</span>(<span class="op">--</span>n<span class="op">,</span> arr))<span class="op">;</span>
+<span class="op">}</span></code></pre></div>
 <p>The code above checks the base cases defined above and then returns the appropriate value. The interesting part comes when neither case is matched. The <code>take</code> function is where all the recursion happens. It’s been removed into a separate function because the base cases no longer have to be evaluated. <code>take</code> is called with a copy of the original array, using <code>slice</code>, to ensure the original array remains intact.</p>
 <p>Inside <code>take</code> there is a new base case. This case returns an empty array; this is how the array to return is built. If the case isn’t met, the first element from the array is removed, and concatenated with the result of recursively calling <code>take</code>. Eventually, the base case will get hit, and the calls will start bubbling up, adding each element to the array in turn.</p>
 <p>If you run the same cases as before, the results are the same (with the exception of the optional argument).</p>
 <p>This is, of course, the wrong solution.</p>
 <p>See the problem with constraints is that sometimes they’re all you see. If you say, ‘no loops,’ suddenly everything looks like it needs recursion. This is the better solution:</p>
-<p>{% highlight javascript linenos %} var curry = require(‘curry’);</p>
-<p>module.exports = curry(function first(n,arr){ if(!arr.length) return void 0; if(arr.length === 1) return arr[0];</p>
-<pre><code>return arr.slice(0, n);</code></pre>
-<p>}); {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> curry <span class="op">=</span> <span class="at">require</span>(<span class="st">'curry'</span>)<span class="op">;</span>
+
+<span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> <span class="at">curry</span>(<span class="kw">function</span> <span class="at">first</span>(n<span class="op">,</span>arr)<span class="op">{</span>
+	<span class="cf">if</span>(<span class="op">!</span><span class="va">arr</span>.<span class="at">length</span>) <span class="cf">return</span> <span class="kw">void</span> <span class="dv">0</span><span class="op">;</span>
+	<span class="cf">if</span>(<span class="va">arr</span>.<span class="at">length</span> <span class="op">===</span> <span class="dv">1</span>) <span class="cf">return</span> arr[<span class="dv">0</span>]<span class="op">;</span>
+
+	<span class="cf">return</span> <span class="va">arr</span>.<span class="at">slice</span>(<span class="dv">0</span><span class="op">,</span> n)<span class="op">;</span>
+<span class="op">}</span>)<span class="op">;</span></code></pre></div>
 <p>Much cleaner, and easier to understand. Sure there are going to be instances where recursion is needed, but not when you have things like <code>splice</code> available to you. Still, it’s an interesting detour to take; to implement as if native functions didn’t exist, but we needn’t throw the baby out with the bath water because we can’t do loops.</p>
 <p>In both solutions, currying the function gives you the benefit of being able to partially apply the function, so you can do stuff like this:</p>
-<p>{% highlight javascript %} var first = require(‘first’), first5 = first(5);</p>
-<p>first5([1,2,3,4,5,6,7,8]); //=&gt; [1,2,3,4,5] {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> first <span class="op">=</span> <span class="at">require</span>(<span class="st">'first'</span>)<span class="op">,</span>
+	first5 <span class="op">=</span> <span class="at">first</span>(<span class="dv">5</span>)<span class="op">;</span>
+
+<span class="at">first5</span>([<span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">6</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">8</span>])<span class="op">;</span> <span class="co">//=&gt; [1,2,3,4,5]</span></code></pre></div>
 <p>I admit that doesn’t look like much here, but it comes in very handy when you want to compose functions later on.</p>
 <h2 id="the-underscore-version">The Underscore Version</h2>
 <p>Now to compare the code above with what Underscore <em>actuall</em> does.</p>
-<p>{% highlight javascript linenos %} <em>.first = </em>.head = _.take = function(array, n, guard) { if (array == null) return void 0; return (n == null) || guard ? array[0] : slice.call(array, 0, n); }; {% endhighlight %}</p>
-Interesting. The implementation adds an argument that the documentation doesn’t list. According to the <a href="http://underscorejs.org/docs/underscore.html#section-41">annotated source</a>:
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">_</span>.<span class="at">first</span> <span class="op">=</span> <span class="va">_</span>.<span class="at">head</span> <span class="op">=</span> <span class="va">_</span>.<span class="at">take</span> <span class="op">=</span> <span class="kw">function</span>(array<span class="op">,</span> n<span class="op">,</span> guard) <span class="op">{</span>
+    <span class="cf">if</span> (array <span class="op">==</span> <span class="kw">null</span>) <span class="cf">return</span> <span class="kw">void</span> <span class="dv">0</span><span class="op">;</span>
+    <span class="cf">return</span> (n <span class="op">==</span> <span class="kw">null</span>) <span class="op">||</span> guard <span class="op">?</span> array[<span class="dv">0</span>] : <span class="va">slice</span>.<span class="at">call</span>(array<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> n)<span class="op">;</span>
+  <span class="op">};</span></code></pre></div>
+<p>Interesting. The implementation adds an argument that the documentation doesn’t list. According to the <a href="http://underscorejs.org/docs/underscore.html#section-41">annotated source</a>:</p>
 <blockquote>
-The guard check allows it to work with <code>_.map</code>.
+<p>The guard check allows it to work with <code>_.map</code>.</p>
 </blockquote>
 <p>Now, I haven’t looked into <code>map</code> yet, but it seems clear that <code>guard</code> is roughly equivilant to my check for arrays with a length of 1…and least for my immediate purposes.</p>
 <p>The first difference I notice in the implementation is that I neglected to guard against <code>n</code> not being a value; which seems a silly mistake on my part, but easy enough to fix. Of course, I could just let uses suffer the exceptions they rightfully deserve if they don’t use the function correctly, but that’s probably a bad idea.</p>

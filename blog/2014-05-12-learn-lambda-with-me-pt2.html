@@ -6,7 +6,7 @@
     <title>thunklife - Learn λ Calculus With Me - Booleans & Conditions</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -48,20 +48,41 @@
 <p>These items are covered in chapter 3 of <a href="http://www.amazon.com/gp/product/0486478831">the book</a>.</p>
 <h2 id="conditional-expression-true-false">Conditional Expression, True &amp; False</h2>
 <p>Let’s consider a simple conditional expression in JavaScript:</p>
-<p>{% highlight javascript linenos %} if (someCondition) { return doTrueAction(); } else { return doFalseAction(); } {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="cf">if</span> (someCondition) <span class="op">{</span>
+  <span class="cf">return</span> <span class="at">doTrueAction</span>()<span class="op">;</span>
+<span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+  <span class="cf">return</span> <span class="at">doFalseAction</span>()<span class="op">;</span>
+<span class="op">}</span></code></pre></div>
 <p>In JavaScript, the <code>else</code> block isn’t required, but in other languages, such as Haskell, the <code>else</code> block must be explicit; the same is true in λ Calculus.</p>
 <p>Of course, JavaScript offers an alternative syntax for if/else conditions:</p>
-<p>{% highlight javascript linenos %} return someCondition ? doTrueAction() : doFalseAction(); {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="cf">return</span> someCondition <span class="op">?</span> <span class="at">doTrueAction</span>() : <span class="at">doFalseAction</span>()<span class="op">;</span></code></pre></div>
 <p>With a conditional expression expressed in this fashion, the translation to λ Calculus becomes simpler. If you think about it abstractly, what we have here is a pair of functions; one that applies if a condition is true and the other if the condition is false. So then, a conditional expression can be modeled using the <strong>pair</strong> function.</p>
-<p>If you recall, the <strong>pair</strong> function looks like this: <code>λx.λy.λf((f x) y)</code>. In JavaScript it is written like so: {% highlight javascript linenos %} var pair = function (x){ return function (y){ return function (f){ return f(x)(y); }; }; }; {% endhighlight %}</p>
+<p>If you recall, the <strong>pair</strong> function looks like this: <code>λx.λy.λf((f x) y)</code>. In JavaScript it is written like so:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> pair <span class="op">=</span> <span class="kw">function</span> (x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span> (y)<span class="op">{</span>
+    <span class="cf">return</span> <span class="kw">function</span> (f)<span class="op">{</span>
+      <span class="cf">return</span> <span class="at">f</span>(x)(y)<span class="op">;</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+<span class="op">};</span></code></pre></div>
 <p>Of course, we’re good developers and we wouldn’t duplicate that code, but we would want to name it such that we know we’re talking about, so we’ll just give it an alias.</p>
-<p>{% highlight javascript linenos %} var cond = pair; {% endhighlight%}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> cond <span class="op">=</span> pair<span class="op">;</span></code></pre></div>
 <p>If a conditional expression is a pair, then we should be able to use <strong>first</strong> and <strong>second</strong> to represent true and false, respectively, since they are used to pick an item from a pair. Here’s a quick refresher on those two:</p>
 <p><strong>first</strong> looks like this: <code>λx.λy.x</code>, and <strong>second</strong> looks like this: <code>λx.λy.y</code>. In JavaScript we wrote those functions like this:</p>
-<p>{% highlight javascript linenos %} var first = function (x){ return function (y){ return x; }; };</p>
-<p>var second = function (x){ return function (y){ return y; }; }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> first <span class="op">=</span> <span class="kw">function</span> (x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span> (y)<span class="op">{</span>
+    <span class="cf">return</span> x<span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">};</span>
+
+<span class="kw">var</span> second <span class="op">=</span> <span class="kw">function</span> (x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span> (y)<span class="op">{</span>
+    <span class="cf">return</span> y<span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">};</span></code></pre></div>
 <p>Again, we can repurpose these functions:</p>
-<p>{% highlight javascript linenos %} var truth = first; var untruth = second; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> truth <span class="op">=</span> first<span class="op">;</span>
+<span class="kw">var</span> untruth <span class="op">=</span> second<span class="op">;</span></code></pre></div>
 <p>Since we can’t use <code>true</code> and <code>false</code> as names, I’ve gone with <code>truth</code> and <code>untruth</code> instead.</p>
 <p>I’m not going to go into the reduction of these functions since we’ve already covered it. If you’d like a refresher on how these reduce,check out the previous post.</p>
 <h2 id="not">Not</h2>
@@ -93,7 +114,9 @@
 <p>This reduces to <code>((truth untruth) truth)</code>. We know that <code>truth</code> is the same as <code>first</code> so it will take two arguments are return the first, but for fun let’s complete the reduction.</p>
 <p><code>((λx.λy.x untruth) truth)</code> is the expansion of the previous expression. Which in turn reduces to <code>(λy.untruth truth)</code>. At this point, there is no need to reduce any further. The body, or return value, has already been substituted, we know <code>untruth</code> is the returned value.</p>
 <p>So how is this expressed in JavaScript?</p>
-<p>{% highlight javascript linenos %} var not = function (x){ return x(untruth)(truth); }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> not <span class="op">=</span> <span class="kw">function</span> (x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="at">x</span>(untruth)(truth)<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <p>Keep in mind that <code>x</code> is a function that represents either true or false, aka <strong>truth</strong> or <strong>false</strong>, aka <strong>first</strong> or <strong>second</strong>.</p>
 <h2 id="and">And</h2>
 <p>The <strong>and</strong> operator, or <code>&amp;&amp;</code> in JavaScript, takes to operands and returns true if both values are true. We can represent this using the following truth table:</p>

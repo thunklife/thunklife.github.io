@@ -6,7 +6,7 @@
     <title>thunklife - Flickr Viewer - Part 2 The Search Bar</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -41,50 +41,45 @@
 <p>I’m going to be using <a href="http://foundation.zurb.com/">Zurb Foundation</a> for the CSS. Since writing this project, Foundation has gone from version 4 to 5; this project is using version 4…and a custom build of it at that.</p>
 <p>Before you get going, download Foundation (which will also come along with normalize.css) and add the to a new directory called css/; when we build the project, all of the CSS in that directory will be bundled up and written to public/css (make sure you create that directory too).</p>
 <p>While we’re at it, let’s get rid of everything that was in public/index.html and put in something a little more meaningful.</p>
-{% highlight html linenos %}
-<!Doctype html>
-<html>
-<head>
-<pre><code>&lt;meta charset=&quot;utf-8&quot;&gt;
-&lt;title&gt;Flicker Viewer&lt;/title&gt;
-&lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;
-&lt;link href=&quot;css/site.css&quot; rel=&quot;stylesheet&quot;&gt;</code></pre>
-</head>
-<body>
-<pre><code>&lt;nav class=&quot;top-bar&quot;&gt;
-  &lt;ul class=&quot;title-area&quot;&gt;
-    &lt;li class=&quot;name&quot;&gt;
-      &lt;h1&gt;
-      &lt;a href=&quot;/&quot;&gt;flickr viewer&lt;/a&gt;
-      &lt;h1&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/nav&gt;
-&lt;div class=&quot;row&quot; id=&quot;search-container&quot;&gt;&lt;/div&gt;</code></pre>
-</body>
-</html>
-<p>{% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="er">&lt;</span>!Doctype html&gt;
+<span class="kw">&lt;html&gt;</span>
+  <span class="kw">&lt;head&gt;</span>
+    <span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">&quot;utf-8&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;title&gt;</span>Flicker Viewer<span class="kw">&lt;/title&gt;</span>
+    <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;app.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+    <span class="kw">&lt;link</span><span class="ot"> href=</span><span class="st">&quot;css/site.css&quot;</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/head&gt;</span>
+  <span class="kw">&lt;body&gt;</span>
+    <span class="kw">&lt;nav</span><span class="ot"> class=</span><span class="st">&quot;top-bar&quot;</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;ul</span><span class="ot"> class=</span><span class="st">&quot;title-area&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;li</span><span class="ot"> class=</span><span class="st">&quot;name&quot;</span><span class="kw">&gt;</span>
+          <span class="kw">&lt;h1&gt;</span>
+          <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/&quot;</span><span class="kw">&gt;</span>flickr viewer<span class="kw">&lt;/a&gt;</span>
+          <span class="kw">&lt;h1&gt;</span>
+        <span class="kw">&lt;/li&gt;</span>
+      <span class="kw">&lt;/ul&gt;</span>
+    <span class="kw">&lt;/nav&gt;</span>
+    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;row&quot;</span><span class="ot"> id=</span><span class="st">&quot;search-container&quot;</span><span class="kw">&gt;&lt;/div&gt;</span>
+  <span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></code></pre></div>
 <p>The HTML above sets up a couple of things: a <code>top-bar</code> and a <code>search-container</code>. The <code>search-container</code> is the interesting bit. This is where our Search Bar will be rendered. So let’s build it.</p>
 <h2 id="the-first-feature">The First Feature</h2>
 <p>My perference, whenever possible, is to break a project up by feature. All of the source files for a single feature exist in that directory. I find it is a nice way to organize files that are concerned with the same thing.</p>
-<p>{% highlight bash %} mkdir searchbar &amp;&amp; cd searchbar/ {% endhighlight %}</p>
-<p>Let’s start with the view, shall we? {% highlight bash %} touch index.hbs {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> searchbar <span class="kw">&amp;&amp;</span> <span class="kw">cd</span> searchbar/</code></pre></div>
+<p>Let’s start with the view, shall we? <sub>~</sub> bash touch index.hbs <sub>~</sub></p>
 <p>Notice the file extension? We’ll be writing all of our views in Handlebars.</p>
-{% highlight HTML linenos %} <!-- index.hbs -->
-<div class="small-12 columns">
-<h1>
-Find Photos
-</h1>
-<pre><code>&lt;div class=&quot;row collapse&quot;&gt;
-  &lt;div class=&quot;small-10 columns&quot;&gt;
-    &lt;input type=&quot;text&quot; class=&quot;search-term&quot; value=&quot;{{term}}&quot; placeholder=&quot;Tag Search&quot;/&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;small-2 columns&quot;&gt;
-    &lt;button class=&quot;search-button button prefix&quot;&gt;Search&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-</div>
-<p>{% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="co">&lt;!-- index.hbs --&gt;</span>
+<span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;small-12 columns&quot;</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;h1&gt;</span>Find Photos<span class="kw">&lt;/h1&gt;</span>
+    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;row collapse&quot;</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;small-10 columns&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">&quot;text&quot;</span><span class="ot"> class=</span><span class="st">&quot;search-term&quot;</span><span class="ot"> value=</span><span class="st">&quot;{{term}}&quot;</span><span class="ot"> placeholder=</span><span class="st">&quot;Tag Search&quot;</span><span class="kw">/&gt;</span>
+	  <span class="kw">&lt;/div&gt;</span>
+	  <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;small-2 columns&quot;</span><span class="kw">&gt;</span>
+	    <span class="kw">&lt;button</span><span class="ot"> class=</span><span class="st">&quot;search-button button prefix&quot;</span><span class="kw">&gt;</span>Search<span class="kw">&lt;/button&gt;</span>
+	  <span class="kw">&lt;/div&gt;</span>
+	<span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></code></pre></div>
 <p>Pretty simple, no? We’ve got your typical boiler-plate HTML as you would expect when using a CSS framework. Then we’ve got an input and we’re setting it’s value to the <code>term</code> property.</p>
 <p>Boring, right? Let’s get to the good stuff. But first, a word on modules.</p>
 <h2 id="npm-for-much-win">npm For Much Win</h2>
@@ -95,28 +90,80 @@ Find Photos
 <h2 id="the-flickr-api">The Flickr API</h2>
 <p>I almost forgot, you’ll need to get a <a href="https://secure.flickr.com/services/apps/create/apply/">Flickr API key</a>. We’re going to be using <code>flickr.tags.getClusterPhotos</code> method, so take a minute to get <a href="https://secure.flickr.com/services/api/flickr.tags.getClusterPhotos.html">acquainted</a>.</p>
 <h2 id="the-search-bar">The Search Bar</h2>
-<p>Let’s write some JS. First, we need a file. {% highlight bash %} touch index.js {% endhighlight %}</p>
+<p>Let’s write some JS. First, we need a file. <sub>~</sub> bash touch index.js <sub>~</sub></p>
 <p>Now to bring a few modules. This component is going to be responsible for making a request to the FlickrAPI when a button is clicked and emitting an event with the results of the call. For XHR I chose to use <a href="https://npmjs.org/package/reqwest">reqwest</a>. For event delegation of DOM events, <a href="https://npmjs.org/package/dom-delegate">dom-delegate</a>. For event emitting, well, nodejs has that built in.</p>
-<p>{% highlight bash %} npm install reqwest dom-delegate –save {% endhighlight %}</p>
-<p>{% highlight javascript linenos %} var Delegate = require(‘dom-delegate’), EventEmitter = require(‘events’).EventEmitter, inherit = require(‘util’).inherits template = require(‘./index.hbs’), reqwest = require(‘reqwest’), apiKey = ‘yourkeyhere’, baseUrl = “http://api.flickr.com/services/rest/?&amp;api_key=” + apiKey; urlSuffix = “&amp;format=json&amp;nojsoncallback=1”</p>
-<p>function SearchBar(element){ EventEmitter.call(this); this.element = element; this.term = ‘’; this.delegate = new Delegate(this.element); this.delegate.on(’click’, ‘.search-button’, this.search.bind(this)); this.delegate.on(‘blur’, ‘.search-term’, this.update.bind(this)); }</p>
-<p>inherit(SearchBar, EventEmitter);</p>
-<p>SearchBar.prototype.render = function(){ this.element.innerHTML = template(this); };</p>
-<p>SearchBar.prototype.update = function(e){ var term = e.target.value; this.term = term || ’’; };</p>
-<p>SearchBar.prototype.search = function(){ var url; if(this.term){ url = baseUrl + “&amp;method=flickr.tags.getClusterPhotos&amp;tag=” + this.term + urlSuffix;<br />
-reqwest({ url: url, method: ‘get’, type: ‘json’, crossOrigin: true, success: function (resp){ this.emit(‘success’, resp.photos.photo); }.bind(this), error: function (err){ console.log(err); } }); } };</p>
-<p>module.exports = SearchBar; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">npm</span> install reqwest dom-delegate --save</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Delegate <span class="op">=</span> <span class="at">require</span>(<span class="st">'dom-delegate'</span>)<span class="op">,</span>
+    EventEmitter <span class="op">=</span> <span class="at">require</span>(<span class="st">'events'</span>).<span class="at">EventEmitter</span><span class="op">,</span>
+    inherit <span class="op">=</span> <span class="at">require</span>(<span class="st">'util'</span>).<span class="at">inherits</span>
+    template <span class="op">=</span> <span class="at">require</span>(<span class="st">'./index.hbs'</span>)<span class="op">,</span>
+    reqwest <span class="op">=</span> <span class="at">require</span>(<span class="st">'reqwest'</span>)<span class="op">,</span>
+    apiKey <span class="op">=</span> <span class="st">'yourkeyhere'</span><span class="op">,</span>
+    baseUrl <span class="op">=</span> <span class="st">&quot;http://api.flickr.com/services/rest/?&amp;api_key=&quot;</span> <span class="op">+</span> apiKey<span class="op">;</span>
+    urlSuffix <span class="op">=</span> <span class="st">&quot;&amp;format=json&amp;nojsoncallback=1&quot;</span>
+
+<span class="kw">function</span> <span class="at">SearchBar</span>(element)<span class="op">{</span>
+    <span class="va">EventEmitter</span>.<span class="at">call</span>(<span class="kw">this</span>)<span class="op">;</span>
+    <span class="kw">this</span>.<span class="at">element</span> <span class="op">=</span> element<span class="op">;</span>
+    <span class="kw">this</span>.<span class="at">term</span> <span class="op">=</span> <span class="st">''</span><span class="op">;</span>
+    <span class="kw">this</span>.<span class="at">delegate</span> <span class="op">=</span> <span class="kw">new</span> <span class="at">Delegate</span>(<span class="kw">this</span>.<span class="at">element</span>)<span class="op">;</span>
+    <span class="kw">this</span>.<span class="va">delegate</span>.<span class="at">on</span>(<span class="st">'click'</span><span class="op">,</span> <span class="st">'.search-button'</span><span class="op">,</span> <span class="kw">this</span>.<span class="va">search</span>.<span class="at">bind</span>(<span class="kw">this</span>))<span class="op">;</span>
+    <span class="kw">this</span>.<span class="va">delegate</span>.<span class="at">on</span>(<span class="st">'blur'</span><span class="op">,</span> <span class="st">'.search-term'</span><span class="op">,</span> <span class="kw">this</span>.<span class="va">update</span>.<span class="at">bind</span>(<span class="kw">this</span>))<span class="op">;</span>
+<span class="op">}</span>
+
+<span class="at">inherit</span>(SearchBar<span class="op">,</span> EventEmitter)<span class="op">;</span>
+
+<span class="va">SearchBar</span>.<span class="va">prototype</span>.<span class="at">render</span> <span class="op">=</span> <span class="kw">function</span>()<span class="op">{</span>
+    <span class="kw">this</span>.<span class="va">element</span>.<span class="at">innerHTML</span> <span class="op">=</span> <span class="at">template</span>(<span class="kw">this</span>)<span class="op">;</span>
+<span class="op">};</span>
+
+<span class="va">SearchBar</span>.<span class="va">prototype</span>.<span class="at">update</span> <span class="op">=</span> <span class="kw">function</span>(e)<span class="op">{</span>
+    <span class="kw">var</span> term <span class="op">=</span> <span class="va">e</span>.<span class="va">target</span>.<span class="at">value</span><span class="op">;</span>
+    <span class="kw">this</span>.<span class="at">term</span> <span class="op">=</span> term <span class="op">||</span> <span class="st">''</span><span class="op">;</span>
+<span class="op">};</span>
+
+<span class="va">SearchBar</span>.<span class="va">prototype</span>.<span class="at">search</span> <span class="op">=</span> <span class="kw">function</span>()<span class="op">{</span>
+    <span class="kw">var</span> url<span class="op">;</span>
+    <span class="cf">if</span>(<span class="kw">this</span>.<span class="at">term</span>)<span class="op">{</span>
+            url <span class="op">=</span> baseUrl <span class="op">+</span>
+            	  <span class="st">&quot;&amp;method=flickr.tags.getClusterPhotos&amp;tag=&quot;</span> <span class="op">+</span> 
+            	  <span class="kw">this</span>.<span class="at">term</span> <span class="op">+</span> urlSuffix<span class="op">;</span>
+            <span class="at">reqwest</span>(<span class="op">{</span>
+                    <span class="dt">url</span><span class="op">:</span> url<span class="op">,</span>
+                    <span class="dt">method</span><span class="op">:</span> <span class="st">'get'</span><span class="op">,</span>
+                    <span class="dt">type</span><span class="op">:</span> <span class="st">'json'</span><span class="op">,</span>
+                    <span class="dt">crossOrigin</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span>
+                    <span class="dt">success</span><span class="op">:</span> <span class="kw">function</span> (resp)<span class="op">{</span>
+                            <span class="kw">this</span>.<span class="at">emit</span>(<span class="st">'success'</span><span class="op">,</span> <span class="va">resp</span>.<span class="va">photos</span>.<span class="at">photo</span>)<span class="op">;</span>
+                    <span class="op">}</span>.<span class="at">bind</span>(<span class="kw">this</span>)<span class="op">,</span>
+                    <span class="dt">error</span><span class="op">:</span> <span class="kw">function</span> (err)<span class="op">{</span>
+                            <span class="va">console</span>.<span class="at">log</span>(err)<span class="op">;</span>
+                    <span class="op">}</span>
+            <span class="op">}</span>)<span class="op">;</span>
+    <span class="op">}</span>
+<span class="op">};</span>
+
+<span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> SearchBar<span class="op">;</span></code></pre></div>
 <p>So what’s going on here? First we need to bring in all of our dependencies. In addition to the modules already discussed, we’ve got the nodejs EventEmitter, the standard nodejs inherit method, and our Handlebars template; followed by our Flickr API info.</p>
 <p>Next we have our SearchBar function. It takes in its containing element, sets up some internal state (term) and registers some handlers using its delegate. If you’re not familiar with <code>EventEmitter.call(this)</code>, we’re calling the EventEmitter function, but supplying the context of <code>this</code>. Which means our SearchBar gets all of the EventEmitter properties. To make sure we get all of the prototype methods, we use the inherit function. Lastly, we add our own prototype methods; one to update the current term, and one to perform a search then emit the results.</p>
 <h3 id="bind-vs-self">Bind vs Self</h3>
 <p>You might have noticed the calls to <code>.bind(this)</code>. This ensures the context of <code>this</code> when our handlers are called. We could have also created a variable to hold <code>this</code>, added all our methods to it, and referenced that variable everywhere instead of <code>this</code>. I have no idea which is better. So if somebody wants to enlighten me, I would love to hear the benefits of either.</p>
 <h2 id="finishing-up">Finishing Up</h2>
 <p>Obviously our current app.js isn’t go to do us any good now. Let’s update it.</p>
-<p>{% highlight javascript linenos %} var SearchBar = require(‘./searchbar’), domready = require(‘domready’);</p>
-<p>function run(){ var searchContainer = document.getElementById(“search-container”), searchbar = new SearchBar(searchContainer); searchbar.on(‘success’, alert(‘wow. so search. very results.’))); searchbar.render(); };</p>
-<p>domready(run); {% endhighlight %} Here we bring in our new SearchBar module, and dom-ready. We get our container, create the search bar, listen for the success event, and render our template. Of course, we wait until the DOM is ready.</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> SearchBar <span class="op">=</span> <span class="at">require</span>(<span class="st">'./searchbar'</span>)<span class="op">,</span>
+    domready <span class="op">=</span> <span class="at">require</span>(<span class="st">'domready'</span>)<span class="op">;</span>
+
+<span class="kw">function</span> <span class="at">run</span>()<span class="op">{</span>
+    <span class="kw">var</span> searchContainer <span class="op">=</span> <span class="va">document</span>.<span class="at">getElementById</span>(<span class="st">&quot;search-container&quot;</span>)<span class="op">,</span>
+    searchbar <span class="op">=</span> <span class="kw">new</span> <span class="at">SearchBar</span>(searchContainer)<span class="op">;</span>
+    <span class="va">searchbar</span>.<span class="at">on</span>(<span class="st">'success'</span><span class="op">,</span> <span class="at">alert</span>(<span class="st">'wow. so search. very results.'</span>)))<span class="op">;</span>
+    <span class="va">searchbar</span>.<span class="at">render</span>()<span class="op">;</span>
+<span class="op">};</span>
+
+<span class="at">domready</span>(run)<span class="op">;</span></code></pre></div>
+<p>Here we bring in our new SearchBar module, and dom-ready. We get our container, create the search bar, listen for the success event, and render our template. Of course, we wait until the DOM is ready.</p>
 <p>All that’s left to do is bundle everything and see what we’ve got.</p>
-<p>{% highlight bash %} npm run watch &amp;&amp; npm run start {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">npm</span> run watch <span class="kw">&amp;&amp;</span> <span class="kw">npm</span> run start</code></pre></div>
 <h2 id="when-next-we-meet">When Next We Meet</h2>
 <p>In the next installment, we’ll actually do something interesting with those search result: display a list of clickable thumbnails.</p>
 </article>

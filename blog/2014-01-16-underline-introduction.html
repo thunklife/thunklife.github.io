@@ -6,7 +6,7 @@
     <title>thunklife - Underline - An Introduction</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -52,28 +52,52 @@
 <p>Another beef I have with Underscore is it’s lack of modularity. I can’t just require <code>map</code>, for example; I have to take the whole thing. <a href="http://lodash.com/">Other alternative</a> libraries have custom builds, which is great. My preference is small modules that I can <code>require</code> and compose as I see fit. So I’m going to do each function as a node module.</p>
 <p>Having each function be a module means I can require bits and pieces as I see fit, without having to bring in an entire library. Of course, sometimes you want a whole library, so I’ll have a module for that too.</p>
 <p>Another benefit of this is each module has it’s own repo. That means it’s own README.md and it’s own tests. I find it far easier to reason about something when it is self contained and as minimal as possile.</p>
-<p>In order to achieve this I’m going organize my modules by ‘category’, similarly to how the Underscore docs are outlined. It looks like this: {% highlight bash %} Projects/under-line/ ├── array │   └── first │   ├── index.js │   ├── node_modules │   ├── package.json │   └── test │   └── index.js ├── lib │   └── curry │   ├── index.js │   └── package.json └── npm-debug.log {% endhighlight %}</p>
+<p>In order to achieve this I’m going organize my modules by ‘category’, similarly to how the Underscore docs are outlined. It looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Projects/under-line/</span>
+├── <span class="kw">array</span>
+│   └── <span class="kw">first</span>
+│       ├── <span class="kw">index.js</span>
+│       ├── <span class="kw">node_modules</span>
+│       ├── <span class="kw">package.json</span>
+│       └── <span class="kw">test</span>
+│           └── <span class="kw">index.js</span>
+├── <span class="kw">lib</span>
+│   └── <span class="kw">curry</span>
+│       ├── <span class="kw">index.js</span>
+│       └── <span class="kw">package.json</span>
+└── <span class="kw">npm-debug.log</span></code></pre></div>
 <h2 id="one-last-thing">One Last Thing</h2>
 <p>The currying requirement adds a bit of a wrench into things. Languages like Haskell curry by default; JavaScript does not. One option would be to write each function in a style that checks the arguments passed and either returns a function to get the remainder, or returns the result; like so:</p>
-<p>{% highlight javascript linenos %} function add(a,b){ if(a &amp;&amp; b) return a + b; return function (b){ return a + b; } } {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="at">add</span>(a<span class="op">,</span>b)<span class="op">{</span>
+	<span class="cf">if</span>(a <span class="op">&amp;&amp;</span> b) <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span>
+	<span class="cf">return</span> <span class="kw">function</span> (b)<span class="op">{</span>
+		<span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span>
+	<span class="op">}</span>
+<span class="op">}</span></code></pre></div>
 <p>Ignoring the obvious issues with the code above, would you really want to write all of that over and over again? I don’t; so I wrote this <code>curry</code> module instead:</p>
-<p>{% highlight javascript linenos%} module.exports = function(fn, fnLength) { var slice = Array.prototype.slice;</p>
-<pre><code>fnLength = fnLength || fn.length;
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> <span class="kw">function</span>(fn<span class="op">,</span> fnLength) <span class="op">{</span>
+	<span class="kw">var</span> slice <span class="op">=</span> <span class="va">Array</span>.<span class="va">prototype</span>.<span class="at">slice</span><span class="op">;</span>
+	
+	fnLength <span class="op">=</span> fnLength <span class="op">||</span> <span class="va">fn</span>.<span class="at">length</span><span class="op">;</span>
 
-return function makeCurry (){
-	var args = slice.call(arguments);
-	if(args.length === fnLength) return fn.apply(this, args);
-	return function(){
-		var newArgs = slice.call(arguments);
-		return makeCurry.apply(this, args.concat(newArgs));
-	}
-}</code></pre>
-<p>} {% endhighlight %}</p>
+	<span class="cf">return</span> <span class="kw">function</span> <span class="at">makeCurry</span> ()<span class="op">{</span>
+		<span class="kw">var</span> args <span class="op">=</span> <span class="va">slice</span>.<span class="at">call</span>(arguments)<span class="op">;</span>
+		<span class="cf">if</span>(<span class="va">args</span>.<span class="at">length</span> <span class="op">===</span> fnLength) <span class="cf">return</span> <span class="va">fn</span>.<span class="at">apply</span>(<span class="kw">this</span><span class="op">,</span> args)<span class="op">;</span>
+		<span class="cf">return</span> <span class="kw">function</span>()<span class="op">{</span>
+			<span class="kw">var</span> newArgs <span class="op">=</span> <span class="va">slice</span>.<span class="at">call</span>(arguments)<span class="op">;</span>
+			<span class="cf">return</span> <span class="va">makeCurry</span>.<span class="at">apply</span>(<span class="kw">this</span><span class="op">,</span> <span class="va">args</span>.<span class="at">concat</span>(newArgs))<span class="op">;</span>
+		<span class="op">}</span>
+	<span class="op">}</span>
+<span class="op">}</span></code></pre></div>
 <p>That <code>curry</code> function is the result of stuff I gleened from reading <a href="http://leanpub.com/javascript-allonge">JavaScript Allonge</a> and from working through the Functional Programming exercises from <a href="http://nodeschool.io">node school</a>. It doesn’t look strange to me any more, but it certainly would have a few months ago.</p>
 <p><code>curry</code> takes a function, finds the number of arguments, and recursively returns functions until all arguments are accounted for. Once all arguments are present and accounted for, we call the original function and supply the arguments. Optionally, you can pass in the number of arguments to curry; which is handy if you want to curry variadic functions (those which take a varying number of arguments). With this in the toolbelt, I can write functions like I normally would and wrap them in a call to <code>curry</code>.</p>
-<p>{% highlight javascript linenos%} var curry = require(‘curry’);</p>
-<p>module.exports = curry(add);</p>
-<p>function add (a,b){ return a + b; } {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> curry <span class="op">=</span> <span class="at">require</span>(<span class="st">'curry'</span>)<span class="op">;</span>
+
+<span class="va">module</span>.<span class="at">exports</span> <span class="op">=</span> <span class="at">curry</span>(add)<span class="op">;</span>
+
+<span class="kw">function</span> <span class="at">add</span> (a<span class="op">,</span>b)<span class="op">{</span>
+	<span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span>
+<span class="op">}</span></code></pre></div>
 <p>Sure, I could have installed some module off of npm, but I wanted to learn!</p>
 <h2 id="until-next-time">Until Next Time</h2>
 <p>I’ve decided to start with the Array category of functions. I’m most comfortable there so I think it’s a good way to test the waters. I actually already wrote the <code>first</code> <a href="underline-array-first.html">module</a>; hop on over and see what I came up with.</p>

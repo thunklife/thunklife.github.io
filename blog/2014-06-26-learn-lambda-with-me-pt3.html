@@ -6,7 +6,7 @@
     <title>thunklife - Learn λ Calculus With Me - Numbers</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -40,10 +40,13 @@
 <h2 id="what-even-is-a-number">What Even Is A Number</h2>
 <p>First, it’s important to note that we’re going to model <em>natural</em> numbers; non-negative integers. Natural numbers are quite simple to think of abstractly: a number <em>n</em> represents <em>n</em> successions from zero.</p>
 <p>So, assuming we have a way to model zero, we could represent numbers like so.</p>
-<p>{% highlight javascript linenos %} var one = succ(zero); var two = succ(one); //=&gt; Or succ(succ(zero)); {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> one <span class="op">=</span> <span class="at">succ</span>(zero)<span class="op">;</span>
+<span class="kw">var</span> two <span class="op">=</span> <span class="at">succ</span>(one)<span class="op">;</span> <span class="co">//=&gt; Or succ(succ(zero));</span></code></pre></div>
 <p>Now that we have an abstract notion of natural numbers, how do we define <code>zero</code>? As it turns out, we can use the <strong>identity</strong> function to represent zero. As a quick refresher, <strong>identity</strong> looks like this: <code>λx.x</code>.</p>
 <p>In JavaScript we could do this:</p>
-<p>{% highlight javascript linenos %} var zero = function(x){ return x; }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> zero <span class="op">=</span> <span class="kw">function</span>(x)<span class="op">{</span>
+   <span class="cf">return</span> x<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <p>But, the <strong>identity</strong> function is already defined. Still, it would be helpful to actually use <strong>zero</strong> in our number functions. I won’t bother showing the aliasing code here, just know that when you see <strong>zero</strong> in a function, it’s the same as the <strong>identity</strong> function.</p>
 <p>If you’re curious why <strong>identity</strong> is used to represent <strong>zero</strong>, be patient. All will be revealed in time.</p>
 <h3 id="succ">Succ</h3>
@@ -53,7 +56,9 @@
 <p>As a quick refresher, this function takes two values (<code>x</code> and <code>y</code>) and then a function to select one. Now, our <strong>succ</strong> function isn’t <em>exactly</em> the same as <strong>pair</strong>; it’s actually a partially applied version of <strong>pair</strong>. Specifically, the <code>x</code> argument is set as <code>untruth</code> (aka <code>second</code>). We’ll see why in just a moment. So after all that, we define <strong>succ</strong> as: <code>λy.λf.((f untruth) y)</code>.</p>
 <p>We can apply <strong>succ</strong> to <strong>zero</strong> to arrive at a representation of the number one: <code>(λy.λf.((f untruth) y) zero)</code>. We can reduce that to: <code>λf((f untruth) zero)</code>. You can follow that as far down the rabbit hole as you like, nesting pairs all the way down.</p>
 <p>So what does this look like in JavaScript? Well, this is one implementation:</p>
-<p>{% highlight javascript linenos %} var succ = function (n){ return pair(untruth)(n); }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> succ <span class="op">=</span> <span class="kw">function</span> (n)<span class="op">{</span>
+    <span class="cf">return</span> <span class="at">pair</span>(untruth)(n)<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <p>Now, I’m fairly certain that this could be simplified to <code>var succ = pair(untruth);</code> because λ functions are curried functions. So even though <strong>pair</strong> needs three arguments in total, it accepts them one at a time, returning a new function each time. So <code>var succ = pair(untruth)</code> returns a function awaiting its second argument which could be <code>n</code>. The longer version is clearer for this example. Plus I haven’t tested the shorter version; so there’s that.</p>
 <h3 id="iszero">IsZero</h3>
 <p>I mentioned earlier that the reason for using <strong>untruth</strong> as the first item in our pair would make sense later. Well, it’s later. Using <strong>untruth</strong> allows us to create a simple function to test if an arbitrary number is zero. Given that a number is a pair awaiting a selector function, and we want to know if a number is zero, can you guess which function is used to model <strong>isZero</strong>?</p>
@@ -63,7 +68,9 @@
 <p>Suddenly the use of <strong>untruth</strong> for the first item in the list, and <strong>identity</strong> to represent <strong>zero</strong> makes total sense, right? Right.</p>
 <p>The <strong>isZero</strong> function looks like this: <code>λn.(n first)</code>.</p>
 <p>The JavaScript version isn’t too different, as it turns out:</p>
-<p>{% highlight javascript linenos %} var isZero = function(n){ return n(first); }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> isZero <span class="op">=</span> <span class="kw">function</span>(n)<span class="op">{</span>
+    <span class="cf">return</span> <span class="at">n</span>(first)<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <h3 id="pred">Pred</h3>
 <p>Now that we’ve got a way to build up successions of numbers, and a mechanism for telling if an arbitrary number is zero, we have a way to determine the predecessor of an arbitrary number.</p>
 <p>Given how numbers are represented, it seems logical that we would simply use <strong>second</strong> to select a predecessor; like so: <code>λn.(n second)</code>. This is, after all the same thing as <strong>isZero</strong> except using <strong>second</strong>. If you subsitute <code>n</code> for <code>λf.((f untruth) zero)</code> (the representation of one), you will get zero back. Zero is the predecessor of one, so clearly this works. But what happens if we try to get the predecessor of zero? We’ll get <strong>second</strong>, aka <strong>untruth</strong> back. Unfortunately, <strong>untruth</strong> isn’t a representation of a number.</p>
@@ -76,7 +83,9 @@
 <p>If I expand <code>pred1</code> the result is <code>(((isZero n) zero) λn.(n second) n)</code>. That expression can be simplified to <code>(((isZero n) zero) (n second))</code>. With this simplified body, the final version of <strong>pred</strong> looks like this: <code>λn.(((is Zero n) zero) (n second))</code>.</p>
 <p>Personally, the simplification from the initial version of <strong>pred</strong> to the final version was a bit confusing. I had to read it a few times to truly see what was going on.</p>
 <p>Luckily, the JavaScript version is straightforward:</p>
-<p>{% highlight javascript linenos %} var pred = function(n){ return isZero(n)(zero)(n(second)); }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> pred <span class="op">=</span> <span class="kw">function</span>(n)<span class="op">{</span>
+    <span class="cf">return</span> <span class="at">isZero</span>(n)(zero)(<span class="at">n</span>(second))<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <p><strong>isZero</strong> is going to return a function that represents true or false. A true value is represented with the <strong>truth</strong> function, which is just an alias for the <strong>first</strong> function. A false value is represented by the <strong>untruth</strong> function, which is just an alias for the <strong>second</strong> function. Both <strong>first</strong> and <strong>second</strong> are binary functions that return the first or second argument, respectively; the first argument will be <code>zero</code> and the second is the result of <code>n(second)</code> or the predecessor of <code>n</code>.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>In λ Calculus, natural numbers can be modeled as a number of successions from some representation for zero. Successions are represented as pairs, where the first item is false, and the second item is either zero or the previous succession. The <strong>identity</strong> function is used to represent zero, which provides a simple way to test if an arbitrary number is zero. If the number represents a pair, and we select the first item using <strong>first</strong> we get false; if the number is zero, we get <strong>first</strong> returned to use which is the same as true.</p>

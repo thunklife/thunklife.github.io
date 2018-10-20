@@ -6,7 +6,7 @@
     <title>thunklife - Learn λ Calculus With Me - Foundations</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -48,7 +48,10 @@
 <p>That’s it, that’s all there is to know. Now go forth and do good maths.</p>
 <p>Notice the lack of numbers, strings, assignment and virtually everything else that you think of when you think of programming. With λ calculus you have to think more abstractly, what exactly is a number anyway? Now, the lack of assignment becomes a problem; expressions get really, really long and hard to follow. For this exercise I’m going to allow assignment of expressions to variables.</p>
 <h2 id="javascript">JavaScript?</h2>
-<p>Sure why not? It’s the language I use the most, but more importantly it has first-class functions. Which means we can create arbitrary functions, pass them as arguments and return them from functions; perfect to study λ calculus. Here is what a λ function looks like in JavaScript: {% highlight javascript linenos %} var id = function(x){ return x; } {% endhighlight %}</p>
+<p>Sure why not? It’s the language I use the most, but more importantly it has first-class functions. Which means we can create arbitrary functions, pass them as arguments and return them from functions; perfect to study λ calculus. Here is what a λ function looks like in JavaScript:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> id <span class="op">=</span> <span class="kw">function</span>(x)<span class="op">{</span>
+  <span class="cf">return</span> x<span class="op">;</span>
+<span class="op">}</span></code></pre></div>
 <h2 id="a-fistful-of-functions">A Fistful of Functions</h2>
 <p>There is much more to discuss about λ functions, but without some context, it won’t do much good. So let’s look at some simple functions to get our feet wet.</p>
 <h3 id="identity">Identity</h3>
@@ -56,7 +59,10 @@
 <p>Based on what we know, about the anatomy of a λ function, we can say that this function has a single variable with the name <code>x</code>. We then have a <code>.</code>, which separates the name from the body, and then <code>x</code> again.</p>
 <p>So this does what exactly? Oh, well, it takes a value and then returns it.</p>
 <p>Lame, right? Don’t worry, it’ll make sense later.</p>
-<p>In JavaScript, <strong>idenitity</strong> looks like this: {%highlight javascript linenos %} var identity = function (x){ return x; }; {% endhighlight %}</p>
+<p>In JavaScript, <strong>idenitity</strong> looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> identity <span class="op">=</span> <span class="kw">function</span> (x)<span class="op">{</span>
+  <span class="cf">return</span> x<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <p>Lame again, I know.</p>
 <h3 id="self-application">Self Application</h3>
 <p>The <strong>self-application</strong> (<strong>selfApply</strong>) function is another one that seems to be of little value, but when you get into recursion, it really shows its power. The <strong>self-application</strong> function has this form: <code>λs.(s s)</code></p>
@@ -66,12 +72,20 @@
 <p>And now you’re thinking, “What a waste of freaking time.”</p>
 <p>Stick with me though, it gets really cool.</p>
 <p>For fun, consider what this does: <code>(λs.(s s) λs.(s s))</code></p>
-<p>Now for the JavaScript. {% highlight javascript linenos%} var selfApply = function(s){ return s(s); }; {% endhighlight %}</p>
+<p>Now for the JavaScript.</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> selfApply <span class="op">=</span> <span class="kw">function</span>(s)<span class="op">{</span>
+  <span class="cf">return</span> <span class="at">s</span>(s)<span class="op">;</span>
+<span class="op">};</span></code></pre></div>
 <h3 id="function-application">Function Application</h3>
 <p>The <strong>function-application</strong> or just <strong>apply</strong> function will probably be more familiar to most JavaScript developers because we’re so used to passing around functions for callbacks..</p>
 <p>The <strong>function-application</strong> function has this form: <code>λf.λa.(f a)</code></p>
 <p>The <strong>function-application</strong> function does exactly what its name implies, it takes a function and an argument, and applies the function to that argument.</p>
-<p>In JavaScript, we write: {% highlight javascript linenos %} var apply = function(f){ return function (a){ return f(a); }; }; {% endhighlight %}</p>
+<p>In JavaScript, we write:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> apply <span class="op">=</span> <span class="kw">function</span>(f)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span> (a)<span class="op">{</span>
+    <span class="cf">return</span> <span class="at">f</span>(a)<span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">};</span></code></pre></div>
 <h2 id="all-about-variables">All About Variables</h2>
 <p>With a couple of basic functions under our belts, we can look at variables a bit more in depth.</p>
 <p>Variable scope in λ calculus will be familiar to JavaScript developers because they are function scoped. In this function <code>λf.λs.(f (s s))</code> the variable <code>f</code> is in the scope of <code>(f (s s))</code> while the variable <code>s</code> is in the scope of <code>(s s)</code>.</p>
@@ -86,13 +100,20 @@
 <p>Lastly, if the expresion is only a name <code>&lt;name&gt;</code> then the variable is free.</p>
 <h3 id="variables-in-javascript">Variables in JavaScript</h3>
 <p>As it turns out, scoping, free and bound variables work in the same way in JavaScript; take this code for example:</p>
-<p>{% highlight javascript linenos %} var weirdAdd = function operandA(a){ return function operandB(b){ return a + b; }; };</p>
-<p>weirdAdd(2)(3); //=&gt; 5; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> weirdAdd <span class="op">=</span> <span class="kw">function</span> <span class="at">operandA</span>(a)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span> <span class="at">operandB</span>(b)<span class="op">{</span>
+    <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">};</span>
+
+<span class="at">weirdAdd</span>(<span class="dv">2</span>)(<span class="dv">3</span>)<span class="op">;</span> <span class="co">//=&gt; 5;</span></code></pre></div>
 <p>In the example above <code>a</code> is scoped to the function <code>operandA</code> and can be accessed by any nested functions, like <code>operandB</code>. Additionally, the variable <code>b</code> is scoped to <code>operandB</code>.</p>
 <p>What about free and bound variables? Well, we can follow the same rules. If we look at the entire expression above, both <code>a</code> and <code>b</code> are bound. However what if we do this:</p>
-<p>{% highlight javascript linenos %} var add5 = weirdAdd(5); //=&gt; [Function operandB] {% endhighlight%}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> add5 <span class="op">=</span> <span class="at">weirdAdd</span>(<span class="dv">5</span>)<span class="op">;</span> <span class="co">//=&gt; [Function operandB]</span></code></pre></div>
 <p>The function returned by calling <code>weirdAdd</code> with a single argument would look like this:</p>
-<p>{%highlight javascript linenos%} function operandB(b){ return a + b; } {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="at">operandB</span>(b)<span class="op">{</span>
+  <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span>
+<span class="op">}</span></code></pre></div>
 <p>Here we can see that <code>operandB</code> has access <code>a</code> because of the scope of original function <code>operandA</code>, however, <code>a</code> is free in this situation.</p>
 <h2 id="reduction">Reduction</h2>
 <p>Now that we know the difference between a free and bound variables, we can look at the process of substituting names for their arguments.</p>
@@ -115,11 +136,21 @@
 <h3 id="first">First</h3>
 <p>Let’s say we have a pair of things, and we want to get the first one, how would you got about that using only functions? Well it would look something like this: <code>λx.λy.x</code>.</p>
 <p>The <strong>first</strong> function, takes two arguments and returns the first. I’m not going to bother with an example reduction because it’s pretty self-explanatory.</p>
-<p>In JavaScript it looks like this {% highlight javascript linenos %} var first = function(x){ return function(y){ return x; }; }; {% endhighlight %}</p>
+<p>In JavaScript it looks like this</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> first <span class="op">=</span> <span class="kw">function</span>(x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span>(y)<span class="op">{</span>
+    <span class="cf">return</span> x<span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">};</span></code></pre></div>
 <h3 id="second">Second</h3>
 <p>I’m going to move on to the next function quickly because they make more sense once you see how to create pairs. The <strong>second</strong> function is almost identical to <strong>first</strong>, except it returns the second argument.</p>
 <p>The <strong>second</strong> function has this form: <code>λx.λy.y</code></p>
-<p>I’m sure you’ve already figured out what it looks like in JavaScript, but just for fun: {% highlight javascript linenos %} var second = function(x){ return function(y){ return y; }; }; {% endhighlight %}</p>
+<p>I’m sure you’ve already figured out what it looks like in JavaScript, but just for fun:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> second <span class="op">=</span> <span class="kw">function</span>(x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span>(y)<span class="op">{</span>
+    <span class="cf">return</span> y<span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">};</span></code></pre></div>
 <h3 id="pair">Pair</h3>
 <p>Now for the good stuff. So how would you create a pair of things using only functions? Well, you could do this: <code>λx.λy.λf((f x) y)</code></p>
 <p>WAT?</p>
@@ -134,7 +165,13 @@
 <p><code>((λx.λy.x identity) selfApply)</code></p>
 <p>Now we replace <code>x</code> with <code>identity</code> and <code>y</code> with <code>selfApply</code> and we get our <strong>identity</strong> function as the result.</p>
 <p>In JavaScript, this looks like:</p>
-<p>{% highlight javascript linenos %} var pair = function(x){ return function(y){ return function(f){ return f(x)(y); }; }; }; {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> pair <span class="op">=</span> <span class="kw">function</span>(x)<span class="op">{</span>
+  <span class="cf">return</span> <span class="kw">function</span>(y)<span class="op">{</span>
+    <span class="cf">return</span> <span class="kw">function</span>(f)<span class="op">{</span>
+      <span class="cf">return</span> <span class="at">f</span>(x)(y)<span class="op">;</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+<span class="op">};</span></code></pre></div>
 <h2 id="summary">Summary</h2>
 <p>So there you have it, a high-level overview of the λ calculus. I’ve hand-waived a couple of things here and there but what is presented above is the core of λ calculus as I currently understand it.</p>
 <p>I would like to say something about name clashes, which I didn’t cover at all. Because of how variables are scoped, it is entirely legal to reuse variable names; this is true of JavaScript as well. I didn’t touch on the implications because you just plain shouldn’t do it. Things are simpler when you don’t have to consider which version of variable <code>h</code> is in scope at what point during a reduction.</p>

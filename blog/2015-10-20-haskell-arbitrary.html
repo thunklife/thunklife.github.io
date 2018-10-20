@@ -6,7 +6,7 @@
     <title>thunklife - On Types, Kinds and The Arbitrary Nature of Haskell</title>
     <link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/site.css">
-    <link rel="stylesheet" href="../static/css/pygments.css">
+    <link rel="stylesheet" href="../static/css/syntax.css">
   </head>
   <body>
     <div class="container">
@@ -37,58 +37,129 @@
 <p>My purpose is to explain <em>why</em> <code>Foldable</code> and <code>Functor</code> do what they do when implemented for types like<code>(,)</code> or <code>Either a b</code>. I personally found it confusing a few months ago when I first came across. Luckily, I had a very <a href="https://twitter.com/bitemyapp">patient teacher</a>, and now I’d like do what I can to help anybody that is in the same place that I was.</p>
 <h2 id="kinds---the-types-of-types">Kinds - The types of types</h2>
 <p>In order to understand what is going on, we first need to have an understanding of kinds. Just as every expression in Haskell has a type, every type in Haskell has a kind. The simplest way I’ve found to think of kinds is as the type of types, and we can query the kind of a type using GHCi.</p>
-<p>{% highlight bash %} Prelude&gt; :k Char Char :: *</p>
-<p>Prelude&gt; :k [][] :: * -&gt; *</p>
-<p>Prelude&gt; :k (,) (,) :: * -&gt; * -&gt; * {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> :k Char
+<span class="kw">Char</span> :: *
+
+<span class="kw">Prelude&gt;</span> :k []
+[] :: <span class="kw">*</span> -<span class="kw">&gt;</span> *
+
+<span class="kw">Prelude&gt;</span> :k (,)
+<span class="kw">(</span>,<span class="kw">)</span> :: <span class="kw">*</span> -<span class="kw">&gt;</span> * -<span class="kw">&gt;</span> *</code></pre></div>
 <p>The kind of a type is denoted using a <code>*</code>. Concrete types like <code>Char</code> have kind <code>*</code>. The <code>List</code> type, however, has the kind <code>* -&gt; *</code> which looks a lot like the type signature for a function. That’s because type constructors <em>are</em> functions, so we can read <code>* -&gt; *</code> as “this type takes some concrete type <code>*</code> and returns a concrete type.” This makes sense because a list is polymorphic (<code>[a]</code>); it needs some type for its elements in order to be a concrete type. These types are referred to as higher-kinded types.</p>
 <p>Tuples have the kind <code>* -&gt; * -&gt; *</code>, and you might have guessed already that means it needs two concrete types before it can itself be concrete.</p>
 <p>Since type constructors are functions, we can partially apply them:</p>
-<p>{% highlight bash %} Prelude&gt; :k (,) Int (,) Int :: * -&gt; *</p>
-<p>Prelude&gt; :k (,) Int String (,) Int String :: * {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> :k (,) <span class="kw">Int</span>
+<span class="kw">(</span>,<span class="kw">)</span> <span class="kw">Int</span> :: * -<span class="kw">&gt;</span> *
+
+<span class="kw">Prelude&gt;</span> :k (,) <span class="kw">Int</span> String
+<span class="kw">(</span>,<span class="kw">)</span> <span class="kw">Int</span> String :: *</code></pre></div>
 <p>In the first example we provide one of the required type variables for a tuple, and the result has kind <code>* -&gt; *</code>. In the second, we provide both type variables and get back a concrete type.</p>
 <p>Here is an example of another type that sometimes causes confusion:</p>
-<p>{% highlight bash %} Prelude&gt; :k Either Either :: * -&gt; * -&gt; *</p>
-<p>Prelude&gt; :k Either Int Either Int :: * -&gt; * {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> :k Either
+<span class="kw">Either</span> :: * -<span class="kw">&gt;</span> * -<span class="kw">&gt;</span> *
+
+<span class="kw">Prelude&gt;</span> :k Either Int
+<span class="kw">Either</span> Int :: * -<span class="kw">&gt;</span> *</code></pre></div>
 <p>The strange thing here is that <code>Either a b</code> is a sum type. Unlike a tuple (which is a product), a value of <code>Either a b</code> can only be one of two things <code>Left a</code> or <code>Right b</code>. However, the kind of the <code>Either a b</code> type is still <code>* -&gt; * -&gt; *</code>; the type is not concrete until both type variables are provided.</p>
 <h2 id="kinds-and-typeclasses">Kinds and Typeclasses</h2>
 <p>There is a special relationship between typeclasses and kinds, and it is important to understanding what is going on with <code>(,)</code> and <code>Either a b</code>.</p>
 <p>Typeclass definitions can constrain the kind of the type variable they require.</p>
-<p>{% highlight bash %} Prelude&gt; :i Foldable class Foldable (t :: * -&gt; *) where foldr :: (a -&gt; b -&gt; b) -&gt; t a -&gt; b -&gt; b</p>
-<p>Prelude&gt; :i Functor class Functor (f :: * -&gt; *) where fmap :: (a -&gt; b) -&gt; f a -&gt; f b {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> :i Foldable
+<span class="kw">class</span> Foldable (t :: * -<span class="kw">&gt;</span> *) <span class="kw">where</span>
+    <span class="kw">foldr</span> :: (a -<span class="kw">&gt;</span> b -<span class="kw">&gt;</span> b) <span class="kw">-&gt;</span> t a -<span class="kw">&gt;</span> b -<span class="kw">&gt;</span> b
+
+<span class="kw">Prelude&gt;</span> :i Functor
+<span class="kw">class</span> Functor (f :: * -<span class="kw">&gt;</span> *) <span class="kw">where</span>
+    <span class="kw">fmap</span> :: (a -<span class="kw">&gt;</span> b) <span class="kw">-&gt;</span> f a -<span class="kw">&gt;</span> f b</code></pre></div>
 <p>Both classes require that any instances be of kind <code>* -&gt; *</code>. This means we can’t have a <code>Functor</code> instance of <code>Char</code> or <code>Int</code>, nor can we have one for <code>(,)</code> or <code>Either a b</code>; none of those types have the right kind. But we can make <code>Either a b</code> or <code>(,)</code> the right kind by partially applying it. We don’t need to provide a concrete type though, we can simply provide a type variable.</p>
-<p>{% highlight haskell linenos %} instance Functor (Either a) where – omitted</p>
-<p>instance Functor ((,) a) where – omitted {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">Either</span> a) <span class="kw">where</span>
+<span class="co">-- omitted</span>
+
+<span class="kw">instance</span> <span class="dt">Functor</span> ((,) a) <span class="kw">where</span>
+<span class="co">-- omitted</span></code></pre></div>
 <p>Now we have instances of <code>Functor</code> for our types, but what does that mean for the actual function implementations?</p>
 <p>Take a look at the types for <code>fmap</code> and <code>foldr</code> again.</p>
-<p>{% highlight bash %} Prelude&gt; :i Foldable class Foldable (t :: * -&gt; *) where foldr :: (a -&gt; b -&gt; b) -&gt; t a -&gt; b -&gt; b</p>
-<p>Prelude&gt; :i Functor class Functor (f :: * -&gt; *) where fmap :: (a -&gt; b) -&gt; f a -&gt; f b {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> :i Foldable
+<span class="kw">class</span> Foldable (t :: * -<span class="kw">&gt;</span> *) <span class="kw">where</span>
+    <span class="kw">foldr</span> :: (a -<span class="kw">&gt;</span> b -<span class="kw">&gt;</span> b) <span class="kw">-&gt;</span> t a -<span class="kw">&gt;</span> b -<span class="kw">&gt;</span> b
+
+<span class="kw">Prelude&gt;</span> :i Functor
+<span class="kw">class</span> Functor (f :: * -<span class="kw">&gt;</span> *) <span class="kw">where</span>
+    <span class="kw">fmap</span> :: (a -<span class="kw">&gt;</span> b) <span class="kw">-&gt;</span> f a -<span class="kw">&gt;</span> f b</code></pre></div>
 <p><code>foldr</code> requires a <code>t a</code> where <code>t</code> is kind <code>* -&gt; *</code>. The <code>a</code> in <code>t a</code>, in the case of <code>Either a b</code> and <code>(,)</code> necessarily points to the second type variable; that is all it could be. Neither typeclass knows about that the type you are using has previously applied type variables; it only knows about “final” one.</p>
 <p>In the case of a tuple, that means the second element. In the case of <code>Either a b</code>, that means <code>Right b</code> since that is where the second type variable is used. As you can see from the actual implementations, that is exactly what we get.</p>
-<p>{% highlight haskell linenos %} instance Functor (Either a) where fmap _ (Left x) = Left x fmap f (Right y) = Right (f y)</p>
-<p>instance Functor ((,) a) where fmap f (x, y) = (x, f y) {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">Either</span> a) <span class="kw">where</span>
+    fmap _ (<span class="dt">Left</span> x)  <span class="fu">=</span> <span class="dt">Left</span> x
+    fmap f (<span class="dt">Right</span> y) <span class="fu">=</span> <span class="dt">Right</span> (f y)
+
+<span class="kw">instance</span> <span class="dt">Functor</span> ((,) a) <span class="kw">where</span>
+    fmap f (x, y) <span class="fu">=</span> (x, f y)</code></pre></div>
 <h2 id="arbitrary">“Arbitrary”</h2>
 <p>One of the words that keep floating around in these arguments is “arbitrary”, and I personally can see how one might perceive it as such. From the implementations, it appears that we’ve just conventionally decided that we’ll be mapping over the second element. I promise you, this behavior is not arbitrary. It is <em>the only way</em> these functions can be implemented. Don’t believe me? Let’s see what happens if we try to write a <code>Functor</code> instance for <code>Either a b</code> that maps both the sides.</p>
-<p>{% highlight haskell linenos %} {-# LANGUAGE NoImplicitPrelude #-} {-# LANGUAGE KindSignatures #-}</p>
-<p>module Test where import Data.Either</p>
-<p>class Functor (f :: * -&gt; *) where fmap :: (a -&gt; b) -&gt; f a -&gt; f b</p>
-<p>instance Functor (Either a) where fmap f (Left a) = Left (f a) fmap f (Right b) = Right (f b) {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE NoImplicitPrelude #-}</span>
+<span class="ot">{-# LANGUAGE KindSignatures #-}</span>
+
+<span class="kw">module</span> <span class="dt">Test</span> <span class="kw">where</span>
+<span class="kw">import </span><span class="dt">Data.Either</span>
+
+<span class="kw">class</span> <span class="dt">Functor</span> (<span class="ot">f ::</span> <span class="fu">*</span> <span class="ot">-&gt;</span> <span class="fu">*</span>) <span class="kw">where</span>
+<span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b
+
+<span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">Either</span> a) <span class="kw">where</span>
+  fmap f (<span class="dt">Left</span> a)  <span class="fu">=</span> <span class="dt">Left</span> (f a)
+  fmap f (<span class="dt">Right</span> b) <span class="fu">=</span> <span class="dt">Right</span> (f b)</code></pre></div>
 <p>I’ve had to jump through a few hoops since <code>Either a</code> is already an instance of <code>Functor</code>, but everything lines up.</p>
 <p>If we attempt to load that into GHCi</p>
-<p>{% highlight bash %} Prelude&gt; :l Test.hs [1 of 1] Compiling Test ( Test.hs, interpreted )</p>
-<p>Test.hs:11:28: Couldn’t match expected type ‘a’ with actual type ‘b’ ‘b’ is a rigid type variable bound by the type signature for fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b at Test.hs:11:3 ‘a’ is a rigid type variable bound by the instance declaration at Test.hs:10:10 Relevant bindings include a :: a (bound at Test.hs:11:16) f :: a1 -&gt; b (bound at Test.hs:11:8) fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b (bound at Test.hs:11:3) In the first argument of ‘Left’, namely ‘(f a)’ In the expression: Left (f a)</p>
-<p>Test.hs:11:30: Couldn’t match expected type ‘a1’ with actual type ‘a’ ‘a’ is a rigid type variable bound by the instance declaration at Test.hs:10:10 ‘a1’ is a rigid type variable bound by the type signature for fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b at Test.hs:11:3 Relevant bindings include a :: a (bound at Test.hs:11:16) f :: a1 -&gt; b (bound at Test.hs:11:8) fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b (bound at Test.hs:11:3) In the first argument of ‘f’, namely ‘a’ In the first argument of ‘Left’, namely ‘(f a)’ Failed, modules loaded: none. {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> :l Test.hs
+[<span class="kw">1</span> of 1] Compiling Test             ( Test.hs, interpreted )
+
+<span class="kw">Test.hs</span>:11:28:
+    <span class="kw">Couldn</span><span class="st">'t match expected type ‘a’ with actual type ‘b’</span>
+<span class="st">      ‘b’ is a rigid type variable bound by</span>
+<span class="st">          the type signature for</span>
+<span class="st">            fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b</span>
+<span class="st">          at Test.hs:11:3</span>
+<span class="st">      ‘a’ is a rigid type variable bound by</span>
+<span class="st">          the instance declaration at Test.hs:10:10</span>
+<span class="st">    Relevant bindings include</span>
+<span class="st">      a :: a (bound at Test.hs:11:16)</span>
+<span class="st">      f :: a1 -&gt; b (bound at Test.hs:11:8)</span>
+<span class="st">      fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b</span>
+<span class="st">        (bound at Test.hs:11:3)</span>
+<span class="st">    In the first argument of ‘Left’, namely ‘(f a)’</span>
+<span class="st">    In the expression: Left (f a)</span>
+
+<span class="st">Test.hs:11:30:</span>
+<span class="st">    Couldn'</span>t match expected type ‘a1’ with actual type ‘a’
+      ‘<span class="kw">a</span>’ is a rigid type variable bound by
+          <span class="kw">the</span> instance declaration at Test.hs:10:10
+      ‘<span class="kw">a1</span>’ is a rigid type variable bound by
+           <span class="kw">the</span> type signature for
+             <span class="kw">fmap</span> :: (a1 -<span class="kw">&gt;</span> b) <span class="kw">-&gt;</span> Either a a1 -<span class="kw">&gt;</span> Either a b
+           <span class="kw">at</span> Test.hs:11:3
+    <span class="kw">Relevant</span> bindings include
+      <span class="kw">a</span> :: a (bound at Test.hs:11:16)
+      <span class="kw">f</span> :: a1 -<span class="kw">&gt;</span> b (bound at Test.hs:11:8)
+      <span class="kw">fmap</span> :: (a1 -<span class="kw">&gt;</span> b) <span class="kw">-&gt;</span> Either a a1 -<span class="kw">&gt;</span> Either a b
+        <span class="kw">(bound</span> at Test.hs:11:3<span class="kw">)</span>
+    <span class="kw">In</span> the first argument of ‘f’, namely ‘a’
+    <span class="kw">In</span> the first argument of ‘Left’, namely ‘(f a)’
+<span class="kw">Failed</span>, modules loaded: none.</code></pre></div>
 <p>Quite the mess. What the compiler is telling us is that it found type <code>b</code> where it expected to see type <code>a</code>. Speficially, it expected to see type <code>a</code> as the first argument of <code>Left</code> but found <code>(f a)</code> instead. Another interesting thing to note is the type of <code>fmap</code>.</p>
 <pre><code>fmap :: (a1 -&gt; b) -&gt; Either a a1 -&gt; Either a b</code></pre>
 <p>This is a specialized type for <code>fmap</code> for Either and from this type it is clear that the only valid implmentation for <code>fmap</code> is to map over the right side only; we simply cannot map the left. The same holds true for tuples, the only valid implementation is to map over the second element.</p>
 <h2 id="what-about-length">What About <code>length</code></h2>
 <p>Right I almost forgot, this whole thing started because</p>
-<p>{% highlight bash %} Prelude&gt; length (1, 2) 1 {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">Prelude&gt;</span> length (1, 2)
+<span class="kw">1</span></code></pre></div>
 <p>Clearly this is madness! I mean, we have a 2 tuple! I can see both elements! Seriously, this is JavaScript-level fuckery.</p>
 <p>Nah.</p>
 <p>First the implementation of <code>length</code></p>
-<p>{% highlight haskell linenos %} length :: t a -&gt; Int length = foldl’ ( -&gt; c+1) 0 {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">length<span class="ot"> ::</span> t a <span class="ot">-&gt;</span> <span class="dt">Int</span>
+length <span class="fu">=</span> foldl' (\c _ <span class="ot">-&gt;</span> c<span class="fu">+</span><span class="dv">1</span>) <span class="dv">0</span></code></pre></div>
 <p>The definition of <code>foldl'</code> is the same for all instances of <code>Foldable</code> as it relies on the definition of <code>foldr</code> so let’s look at that:</p>
-<p>{% highlight haskell linenos %} instance Foldable ((,) a) where foldr f z (_, y) = f y z {% endhighlight %}</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Foldable</span> ((,) a) <span class="kw">where</span>
+    foldr f z (_, y) <span class="fu">=</span> f y z</code></pre></div>
 <p>We know from before that we simply cannot do anything with the first element; it won’t compile. So we take our function and apply to the second element and the accumulator to get the result. We’ll run the <code>(\c _ -&gt; c+1)</code> part of <code>length</code> once giving us 1.</p>
 <p>Now, we can argue about how much sense that makes or if it’s intuitive</p>
 <p>LOL J/K!</p>
